@@ -39,7 +39,18 @@ namespace MonsterHunt
 
             var currentTown = town1;
 
+            var player = new Player
+            {
+                Id = Guid.NewGuid(),
+                Attack = 1,
+                Defense = 2,
+                Health = 30
+            };
+
             Console.WriteLine($"Welcome in {currentTown.Name}");
+
+            var diceRolls = DiceRolls().GetEnumerator();
+            diceRolls.MoveNext();
 
             foreach(var command in ReadLines())
             {
@@ -58,6 +69,65 @@ namespace MonsterHunt
                     }
                     else
                     {
+                        var monster = new Monster
+                        {
+                            Name = "Monster 1",
+                            Attack = 0,
+                            Defense = 1,
+                            Health = 15
+                        };
+                        Console.WriteLine($"You encounter a {monster.Name}");
+                        foreach (var fightCommand in ReadLines())
+                        {
+                            if (fightCommand.Equals("attack", StringComparison.InvariantCultureIgnoreCase))
+                            {
+                                var attackRollPlayer = diceRolls.Current;
+                                diceRolls.MoveNext();
+                                var attackPlayer = player.Attack + attackRollPlayer - monster.Defense;
+                                if (attackPlayer > monster.Health)
+                                {
+                                    monster.Health = 0;
+                                }
+                                else
+                                {
+                                    monster.Health -= attackPlayer;
+                                }
+                                if (monster.Health == 0)
+                                {
+                                    Console.WriteLine($"{monster.Name} is defeated");
+                                    break;
+                                }
+                                else
+                                {
+                                    Console.WriteLine($"{monster.Name}'s health is {monster.Health}");
+                                }
+
+                                var attackRollMonster = diceRolls.Current;
+                                diceRolls.MoveNext();
+                                var attackMonster = monster.Attack + attackRollMonster - player.Defense;
+                                if (attackMonster > player.Health)
+                                {
+                                    player.Health = 0;
+                                }
+                                else
+                                {
+                                    player.Health -= attackMonster;
+                                }
+                                if (player.Health == 0)
+                                {
+                                    Console.WriteLine("You are defeated");
+                                    break;
+                                }
+                                else
+                                {
+                                    Console.WriteLine($"Your health is {player.Health}");
+                                }
+                            }
+                            else
+                            {
+                                continue;
+                            }
+                        }
                         currentTown = route.Destination;
                         Console.WriteLine($"Welcome in {currentTown.Name}");
                     }
@@ -65,11 +135,20 @@ namespace MonsterHunt
             }
         }
 
-        public static IEnumerable<string> ReadLines()
+        private static IEnumerable<string> ReadLines()
         {
             while (true)
             {
                 yield return Console.ReadLine();
+            }
+        }
+
+        private static IEnumerable<int> DiceRolls()
+        {
+            var random = new Random();
+            while (true)
+            {
+                yield return random.Next(6) + 1;
             }
         }
     }
