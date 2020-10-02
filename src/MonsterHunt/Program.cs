@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
 
@@ -34,25 +35,41 @@ namespace MonsterHunt
                 Destination = town1
             };
 
+            town2.Routes = ImmutableList.Create<Route>().Add(route2);
+
             var currentTown = town1;
 
             Console.WriteLine($"Welcome in {currentTown.Name}");
 
-            var command = Console.ReadLine();
-
-            if (command.StartsWith("go to "))
+            foreach(var command in ReadLines())
             {
-                var destination = command.Substring(6);
-                var route = currentTown.Routes.FirstOrDefault(t => t.Destination.Name.Equals(destination, StringComparison.InvariantCultureIgnoreCase));
-                if (route == null)
+                if (command.Equals("quit", StringComparison.InvariantCultureIgnoreCase))
                 {
-                    Console.WriteLine("Invalid town");
+                    break;
                 }
-                else
+
+                if (command.StartsWith("go to "))
                 {
-                    currentTown = route.Destination;
-                    Console.WriteLine($"Welcome in {currentTown.Name}");
+                    var destination = command.Substring(6);
+                    var route = currentTown.Routes.FirstOrDefault(t => t.Destination.Name.Equals(destination, StringComparison.InvariantCultureIgnoreCase));
+                    if (route == null)
+                    {
+                        Console.WriteLine("Invalid town");
+                    }
+                    else
+                    {
+                        currentTown = route.Destination;
+                        Console.WriteLine($"Welcome in {currentTown.Name}");
+                    }
                 }
+            }
+        }
+
+        public static IEnumerable<string> ReadLines()
+        {
+            while (true)
+            {
+                yield return Console.ReadLine();
             }
         }
     }
