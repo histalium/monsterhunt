@@ -84,6 +84,7 @@ namespace MonsterHunt
                                 var attackRollPlayer = diceRolls.Current;
                                 diceRolls.MoveNext();
                                 var attackPlayer = player.Attack + attackRollPlayer - monster.Defense;
+                                attackPlayer = Math.Max(0, attackPlayer);
                                 if (attackPlayer > monster.Health)
                                 {
                                     monster.Health = 0;
@@ -105,6 +106,7 @@ namespace MonsterHunt
                                 var attackRollMonster = diceRolls.Current;
                                 diceRolls.MoveNext();
                                 var attackMonster = monster.Attack + attackRollMonster - player.Defense;
+                                attackMonster = Math.Max(0, attackMonster);
                                 if (attackMonster > player.Health)
                                 {
                                     player.Health = 0;
