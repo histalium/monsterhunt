@@ -69,69 +69,7 @@ namespace MonsterHunt
                     }
                     else
                     {
-                        var monster = new Monster
-                        {
-                            Name = "Monster 1",
-                            Attack = 0,
-                            Defense = 1,
-                            Health = 15
-                        };
-                        Console.WriteLine($"You encounter a {monster.Name}");
-                        foreach (var fightCommand in ReadLines())
-                        {
-                            if (fightCommand.Equals("attack", StringComparison.InvariantCultureIgnoreCase))
-                            {
-                                var attackRollPlayer = diceRolls.Current;
-                                diceRolls.MoveNext();
-                                var attackPlayer = player.Attack + attackRollPlayer - monster.Defense;
-                                attackPlayer = Math.Max(0, attackPlayer);
-                                if (attackPlayer > monster.Health)
-                                {
-                                    monster.Health = 0;
-                                }
-                                else
-                                {
-                                    monster.Health -= attackPlayer;
-                                }
-                                if (monster.Health == 0)
-                                {
-                                    Console.WriteLine($"{monster.Name} is defeated");
-                                    break;
-                                }
-                                else
-                                {
-                                    Console.WriteLine($"{monster.Name}'s health is {monster.Health}");
-                                }
-
-                                var attackRollMonster = diceRolls.Current;
-                                diceRolls.MoveNext();
-                                var attackMonster = monster.Attack + attackRollMonster - player.Defense;
-                                attackMonster = Math.Max(0, attackMonster);
-                                if (attackMonster > player.Health)
-                                {
-                                    player.Health = 0;
-                                }
-                                else
-                                {
-                                    player.Health -= attackMonster;
-                                }
-                                if (player.Health == 0)
-                                {
-                                    Console.WriteLine("You are defeated");
-                                    break;
-                                }
-                                else
-                                {
-                                    Console.WriteLine($"Your health is {player.Health}");
-                                }
-                            }
-                            else
-                            {
-                                continue;
-                            }
-                        }
-                        currentTown = route.Destination;
-                        Console.WriteLine($"Welcome in {currentTown.Name}");
+                        currentTown = GoToTown(route, player, diceRolls);
                     }
                 }
             }
@@ -151,6 +89,79 @@ namespace MonsterHunt
             while (true)
             {
                 yield return random.Next(6) + 1;
+            }
+        }
+
+        private static Town GoToTown(Route route, Player player, IEnumerator<int> diceRolls)
+        {
+            var monster = new Monster
+            {
+                Name = "Monster 1",
+                Attack = 0,
+                Defense = 1,
+                Health = 15
+            };
+
+            Console.WriteLine($"Welcome in {route.Destination.Name}");
+
+            return route.Destination;
+        }
+
+        private static void Battle(Player player, Monster monster, IEnumerator<int> diceRolls)
+        {
+            Console.WriteLine($"You encounter a {monster.Name}");
+            foreach (var fightCommand in ReadLines())
+            {
+                if (fightCommand.Equals("attack", StringComparison.InvariantCultureIgnoreCase))
+                {
+                    var attackRollPlayer = diceRolls.Current;
+                    diceRolls.MoveNext();
+                    var attackPlayer = player.Attack + attackRollPlayer - monster.Defense;
+                    attackPlayer = Math.Max(0, attackPlayer);
+                    if (attackPlayer > monster.Health)
+                    {
+                        monster.Health = 0;
+                    }
+                    else
+                    {
+                        monster.Health -= attackPlayer;
+                    }
+                    if (monster.Health == 0)
+                    {
+                        Console.WriteLine($"{monster.Name} is defeated");
+                        break;
+                    }
+                    else
+                    {
+                        Console.WriteLine($"{monster.Name}'s health is {monster.Health}");
+                    }
+
+                    var attackRollMonster = diceRolls.Current;
+                    diceRolls.MoveNext();
+                    var attackMonster = monster.Attack + attackRollMonster - player.Defense;
+                    attackMonster = Math.Max(0, attackMonster);
+                    if (attackMonster > player.Health)
+                    {
+                        player.Health = 0;
+                    }
+                    else
+                    {
+                        player.Health -= attackMonster;
+                    }
+                    if (player.Health == 0)
+                    {
+                        Console.WriteLine("You are defeated");
+                        break;
+                    }
+                    else
+                    {
+                        Console.WriteLine($"Your health is {player.Health}");
+                    }
+                }
+                else
+                {
+                    continue;
+                }
             }
         }
     }
