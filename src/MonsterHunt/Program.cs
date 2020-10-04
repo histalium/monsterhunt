@@ -24,7 +24,8 @@ namespace MonsterHunt
             var route1 = new Route
             {
                 Id = Guid.NewGuid(),
-                Destination = town2
+                Destination = town2,
+                NumberOfMonsters = 2
             };
 
             town1.Routes = ImmutableList.Create<Route>().Add(route1);
@@ -32,7 +33,8 @@ namespace MonsterHunt
             var route2 = new Route
             {
                 Id = Guid.NewGuid(),
-                Destination = town1
+                Destination = town1,
+                NumberOfMonsters = 2
             };
 
             town2.Routes = ImmutableList.Create<Route>().Add(route2);
@@ -52,7 +54,7 @@ namespace MonsterHunt
             var diceRolls = DiceRolls().GetEnumerator();
             diceRolls.MoveNext();
 
-            foreach(var command in ReadLines())
+            foreach (var command in ReadLines())
             {
                 if (command.Equals("quit", StringComparison.InvariantCultureIgnoreCase))
                 {
@@ -94,13 +96,18 @@ namespace MonsterHunt
 
         private static Town GoToTown(Route route, Player player, IEnumerator<int> diceRolls)
         {
-            var monster = new Monster
+            for (var i = 0; i < route.NumberOfMonsters; i++)
             {
-                Name = "Monster 1",
-                Attack = 0,
-                Defense = 1,
-                Health = 15
-            };
+                var monster = new Monster
+                {
+                    Name = "Monster 1",
+                    Attack = 0,
+                    Defense = 1,
+                    Health = 15
+                };
+
+                Battle(player, monster, diceRolls);
+            }
 
             Console.WriteLine($"Welcome in {route.Destination.Name}");
 
