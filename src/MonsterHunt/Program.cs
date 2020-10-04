@@ -9,6 +9,22 @@ namespace MonsterHunt
     {
         static void Main(string[] args)
         {
+            var monster1 = new Monster
+            {
+                Name = "Monster 1",
+                Attack = 0,
+                Defense = 1,
+                Health = 15
+            };
+
+            var monster2 = new Monster
+            {
+                Name = "Monster 2",
+                Attack = 1,
+                Defense = 1,
+                Health = 12
+            };
+
             var town1 = new Town
             {
                 Id = Guid.NewGuid(),
@@ -25,7 +41,15 @@ namespace MonsterHunt
             {
                 Id = Guid.NewGuid(),
                 Destination = town2,
-                NumberOfMonsters = 2
+                NumberOfMonsters = 2,
+                Monsters = new[] {
+                    monster1,
+                    monster1,
+                    monster1,
+                    monster1,
+                    monster2,
+                    monster2
+                }
             };
 
             town1.Routes = ImmutableList.Create<Route>().Add(route1);
@@ -34,7 +58,15 @@ namespace MonsterHunt
             {
                 Id = Guid.NewGuid(),
                 Destination = town1,
-                NumberOfMonsters = 2
+                NumberOfMonsters = 2,
+                Monsters = new[] {
+                    monster1,
+                    monster1,
+                    monster1,
+                    monster1,
+                    monster2,
+                    monster2
+                }
             };
 
             town2.Routes = ImmutableList.Create<Route>().Add(route2);
@@ -98,13 +130,7 @@ namespace MonsterHunt
         {
             for (var i = 0; i < route.NumberOfMonsters; i++)
             {
-                var monster = new Monster
-                {
-                    Name = "Monster 1",
-                    Attack = 0,
-                    Defense = 1,
-                    Health = 15
-                };
+                var monster = GetMonster(route, diceRolls);
 
                 Battle(player, monster, diceRolls);
             }
@@ -112,6 +138,20 @@ namespace MonsterHunt
             Console.WriteLine($"Welcome in {route.Destination.Name}");
 
             return route.Destination;
+        }
+
+        private static Monster GetMonster(Route route, IEnumerator<int> diceRolls)
+        {
+            var monster = route.Monsters[diceRolls.Current - 1];
+            diceRolls.MoveNext();
+
+            return new Monster
+            {
+                Name = monster.Name,
+                Attack = monster.Attack,
+                Defense = monster.Defense,
+                Health = monster.Health
+            };
         }
 
         private static void Battle(Player player, Monster monster, IEnumerator<int> diceRolls)

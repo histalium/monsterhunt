@@ -9,5 +9,7 @@ namespace MonsterHunt
         public Town Destination { get; set; }
 
         public int NumberOfMonsters { get; set; }
+
+        public Monster[] Monsters { get; set; }
     }
 }
