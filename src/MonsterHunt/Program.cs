@@ -9,12 +9,33 @@ namespace MonsterHunt
     {
         static void Main(string[] args)
         {
+            var item1 = new Item
+            {
+                Id = Guid.NewGuid(),
+                Name = "Item 1"
+            };
+
+            var item2 = new Item
+            {
+                Id = Guid.NewGuid(),
+                Name = "Item 2"
+            };
+
+            var item3 = new Item
+            {
+                Id = Guid.NewGuid(),
+                Name = "Item 3"
+            };
+
             var monster1 = new Monster
             {
                 Name = "Monster 1",
                 Attack = 0,
                 Defense = 1,
-                Health = 15
+                Health = 15,
+                Loot = new[] {
+                    item1, item2, null, null, null, null
+                }
             };
 
             var monster2 = new Monster
@@ -22,7 +43,10 @@ namespace MonsterHunt
                 Name = "Monster 2",
                 Attack = 1,
                 Defense = 1,
-                Health = 12
+                Health = 12,
+                Loot = new[] {
+                    item1, item3, null, null, null, null
+                }
             };
 
             var town1 = new Town
@@ -78,7 +102,8 @@ namespace MonsterHunt
                 Id = Guid.NewGuid(),
                 Attack = 1,
                 Defense = 2,
-                Health = 30
+                Health = 30,
+                Inventory = new List<Item>()
             };
 
             Console.WriteLine($"Welcome in {currentTown.Name}");
@@ -105,6 +130,10 @@ namespace MonsterHunt
                     {
                         currentTown = GoToTown(route, player, diceRolls);
                     }
+                }
+                else if (command.Equals("inventory", StringComparison.InvariantCultureIgnoreCase))
+                {
+                    ShowInventory(player);
                 }
             }
         }
@@ -150,7 +179,8 @@ namespace MonsterHunt
                 Name = monster.Name,
                 Attack = monster.Attack,
                 Defense = monster.Defense,
-                Health = monster.Health
+                Health = monster.Health,
+                Loot = monster.Loot
             };
         }
 
@@ -176,6 +206,14 @@ namespace MonsterHunt
                     if (monster.Health == 0)
                     {
                         Console.WriteLine($"{monster.Name} is defeated");
+                        var lootDice = diceRolls.Current;
+                        diceRolls.MoveNext();
+                        var loot = monster.Loot[lootDice - 1];
+                        if (loot != null)
+                        {
+                            Console.WriteLine($"loot: {loot.Name}");
+                            player.Inventory.Add(loot);
+                        }
                         break;
                     }
                     else
@@ -209,6 +247,16 @@ namespace MonsterHunt
                 {
                     continue;
                 }
+            }
+        }
+
+        private static void ShowInventory(Player player)
+        {
+            Console.WriteLine("Inventory");
+
+            foreach (var item in player.Inventory)
+            {
+                Console.WriteLine(item.Name);
             }
         }
     }

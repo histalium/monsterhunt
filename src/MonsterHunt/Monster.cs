@@ -13,5 +13,7 @@ namespace MonsterHunt
         internal int Defense { get; set; }
 
         internal int Health { get; set; }
+
+        internal Item[] Loot { get; set; }
     }
 }

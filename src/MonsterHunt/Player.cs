@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 
 namespace MonsterHunt
 {
@@ -11,5 +12,7 @@ namespace MonsterHunt
         internal int Defense { get; set; }
 
         internal int Health { get; set; }
+
+        internal List<Item> Inventory { get; set; }
     }
 }
