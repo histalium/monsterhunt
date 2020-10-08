@@ -7,6 +7,8 @@ namespace MonsterHunt
 {
     class Program
     {
+        private static List<Item> items;
+
         static void Main(string[] args)
         {
             var item1 = new Item
@@ -27,14 +29,18 @@ namespace MonsterHunt
                 Name = "Item 3"
             };
 
+            items = new List<Item> { item1, item2, item3 };
+
             var monster1 = new Monster
             {
                 Name = "Monster 1",
                 Attack = 0,
                 Defense = 1,
                 Health = 15,
-                Loot = new[] {
-                    item1, item2, null, null, null, null
+                Loot = new RollResult<Guid?>
+                {
+                    Roll1 = item1.Id,
+                    Roll2 = item2.Id
                 }
             };
 
@@ -44,8 +50,10 @@ namespace MonsterHunt
                 Attack = 1,
                 Defense = 1,
                 Health = 12,
-                Loot = new[] {
-                    item1, item3, null, null, null, null
+                Loot = new RollResult<Guid?>
+                {
+                    Roll1 = item1.Id,
+                    Roll2 = item3.Id
                 }
             };
 
@@ -232,8 +240,7 @@ namespace MonsterHunt
                     if (monster.Health == 0)
                     {
                         Console.WriteLine($"{monster.Name} is defeated");
-                        var lootDice = dice.Roll();
-                        var loot = monster.Loot[lootDice - 1];
+                        var loot = GetLoot(monster, dice);
                         if (loot != null)
                         {
                             Console.WriteLine($"loot: {loot.Name}");
@@ -272,6 +279,20 @@ namespace MonsterHunt
                     continue;
                 }
             }
+        }
+
+        private static Item GetLoot(Monster monster, Dice dice)
+        {
+            var lootDice = dice.Roll();
+            var lootId = monster.Loot.GetResult(lootDice);
+
+            if (!lootId.HasValue)
+            {
+                return null;
+            }
+
+            var loot = items.Where(t => t.Id == lootId).Single();
+            return loot;
         }
 
         private static void ShowInventory(Player player)
