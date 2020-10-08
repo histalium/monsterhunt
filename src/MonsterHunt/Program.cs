@@ -8,6 +8,7 @@ namespace MonsterHunt
     class Program
     {
         private static List<Item> items;
+        private static List<Monster> monsters;
 
         static void Main(string[] args)
         {
@@ -33,6 +34,7 @@ namespace MonsterHunt
 
             var monster1 = new Monster
             {
+                Id = Guid.NewGuid(),
                 Name = "Monster 1",
                 Attack = 0,
                 Defense = 1,
@@ -46,6 +48,7 @@ namespace MonsterHunt
 
             var monster2 = new Monster
             {
+                Id = Guid.NewGuid(),
                 Name = "Monster 2",
                 Attack = 1,
                 Defense = 1,
@@ -56,6 +59,8 @@ namespace MonsterHunt
                     Roll2 = item3.Id
                 }
             };
+
+            monsters = new List<Monster> { monster1, monster2 };
 
             var merchant1 = new Merchant
             {
@@ -93,14 +98,9 @@ namespace MonsterHunt
                 Id = Guid.NewGuid(),
                 Destination = town2,
                 NumberOfMonsters = 2,
-                Monsters = new[] {
-                    monster1,
-                    monster1,
-                    monster1,
-                    monster1,
-                    monster2,
-                    monster2
-                }
+                Monsters = new RollResult<Guid?>()
+                    .Set(1, 4, monster1.Id)
+                    .Set(5, 6, monster2.Id)
             };
 
             town1.Routes = ImmutableList.Create<Route>().Add(route1);
@@ -110,14 +110,9 @@ namespace MonsterHunt
                 Id = Guid.NewGuid(),
                 Destination = town1,
                 NumberOfMonsters = 2,
-                Monsters = new[] {
-                    monster1,
-                    monster1,
-                    monster1,
-                    monster1,
-                    monster2,
-                    monster2
-                }
+                Monsters = new RollResult<Guid?>()
+                    .Set(1, 4, monster1.Id)
+                    .Set(5, 6, monster2.Id)
             };
 
             town2.Routes = ImmutableList.Create<Route>().Add(route2);
@@ -207,7 +202,15 @@ namespace MonsterHunt
 
         private static Monster GetMonster(Route route, Dice dice)
         {
-            var monster = route.Monsters[dice.Roll() - 1];
+            var diceRoll = dice.Roll();
+            var monsterId = route.Monsters.GetResult(diceRoll);
+
+            if (!monsterId.HasValue)
+            {
+                return null;
+            }
+
+            var monster = monsters.Where(t => t.Id == monsterId).Single();
 
             return new Monster
             {
