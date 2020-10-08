@@ -49,10 +49,29 @@ namespace MonsterHunt
                 }
             };
 
+            var merchant1 = new Merchant
+            {
+                Name = "Merchant 1",
+                Requests = new List<ItemPrice>
+                {
+                    new ItemPrice
+                    {
+                        Item = item1,
+                        Price = 1
+                    },
+                    new ItemPrice
+                    {
+                        Item = item3,
+                        Price = 2
+                    }
+                }
+            };
+
             var town1 = new Town
             {
                 Id = Guid.NewGuid(),
-                Name = "Town 1"
+                Name = "Town 1",
+                Merchants = new List<Merchant> { merchant1 }
             };
 
             var town2 = new Town
@@ -96,6 +115,7 @@ namespace MonsterHunt
             town2.Routes = ImmutableList.Create<Route>().Add(route2);
 
             var currentTown = town1;
+            Merchant currentMerchant = null;
 
             var player = new Player
             {
@@ -122,18 +142,36 @@ namespace MonsterHunt
                 {
                     var destination = command.Substring(6);
                     var route = currentTown.Routes.FirstOrDefault(t => t.Destination.Name.Equals(destination, StringComparison.InvariantCultureIgnoreCase));
-                    if (route == null)
-                    {
-                        Console.WriteLine("Invalid town");
-                    }
-                    else
+                    if (route != null)
                     {
                         currentTown = GoToTown(route, player, diceRolls);
+                        currentMerchant = null;
+                        continue;
                     }
+
+                    var merchant = currentTown.Merchants.FirstOrDefault(t => t.Name.Equals(destination, StringComparison.InvariantCultureIgnoreCase));
+                    if (merchant != null)
+                    {
+                        currentMerchant = merchant;
+                        Console.WriteLine($"Welcome to {merchant.Name}");
+                        continue;
+                    }
+                    Console.WriteLine("Invalid town");
                 }
                 else if (command.Equals("inventory", StringComparison.InvariantCultureIgnoreCase))
                 {
                     ShowInventory(player);
+                }
+                else if (command.Equals("requests", StringComparison.InvariantCultureIgnoreCase))
+                {
+                    if (currentMerchant != null)
+                    {
+                        ShwoRequests(currentMerchant);
+                    }
+                    else
+                    {
+                        Console.WriteLine("Not at a merchant");
+                    }
                 }
             }
         }
@@ -257,6 +295,14 @@ namespace MonsterHunt
             foreach (var item in player.Inventory)
             {
                 Console.WriteLine(item.Name);
+            }
+        }
+
+        private static void ShwoRequests(Merchant merchant)
+        {
+            foreach (var request in merchant.Requests)
+            {
+                Console.WriteLine($"{request.Item.Name} ({request.Price}c)");
             }
         }
     }
