@@ -128,8 +128,7 @@ namespace MonsterHunt
 
             Console.WriteLine($"Welcome in {currentTown.Name}");
 
-            var diceRolls = DiceRolls().GetEnumerator();
-            diceRolls.MoveNext();
+            var dice = new Dice();
 
             foreach (var command in ReadLines())
             {
@@ -144,7 +143,7 @@ namespace MonsterHunt
                     var route = currentTown.Routes.FirstOrDefault(t => t.Destination.Name.Equals(destination, StringComparison.InvariantCultureIgnoreCase));
                     if (route != null)
                     {
-                        currentTown = GoToTown(route, player, diceRolls);
+                        currentTown = GoToTown(route, player, dice);
                         currentMerchant = null;
                         continue;
                     }
@@ -184,22 +183,13 @@ namespace MonsterHunt
             }
         }
 
-        private static IEnumerable<int> DiceRolls()
-        {
-            var random = new Random();
-            while (true)
-            {
-                yield return random.Next(6) + 1;
-            }
-        }
-
-        private static Town GoToTown(Route route, Player player, IEnumerator<int> diceRolls)
+        private static Town GoToTown(Route route, Player player, Dice dice)
         {
             for (var i = 0; i < route.NumberOfMonsters; i++)
             {
-                var monster = GetMonster(route, diceRolls);
+                var monster = GetMonster(route, dice);
 
-                Battle(player, monster, diceRolls);
+                Battle(player, monster, dice);
             }
 
             Console.WriteLine($"Welcome in {route.Destination.Name}");
@@ -207,10 +197,9 @@ namespace MonsterHunt
             return route.Destination;
         }
 
-        private static Monster GetMonster(Route route, IEnumerator<int> diceRolls)
+        private static Monster GetMonster(Route route, Dice dice)
         {
-            var monster = route.Monsters[diceRolls.Current - 1];
-            diceRolls.MoveNext();
+            var monster = route.Monsters[dice.Roll() - 1];
 
             return new Monster
             {
@@ -222,15 +211,14 @@ namespace MonsterHunt
             };
         }
 
-        private static void Battle(Player player, Monster monster, IEnumerator<int> diceRolls)
+        private static void Battle(Player player, Monster monster, Dice dice)
         {
             Console.WriteLine($"You encounter a {monster.Name}");
             foreach (var fightCommand in ReadLines())
             {
                 if (fightCommand.Equals("attack", StringComparison.InvariantCultureIgnoreCase))
                 {
-                    var attackRollPlayer = diceRolls.Current;
-                    diceRolls.MoveNext();
+                    var attackRollPlayer = dice.Roll();
                     var attackPlayer = player.Attack + attackRollPlayer - monster.Defense;
                     attackPlayer = Math.Max(0, attackPlayer);
                     if (attackPlayer > monster.Health)
@@ -244,8 +232,7 @@ namespace MonsterHunt
                     if (monster.Health == 0)
                     {
                         Console.WriteLine($"{monster.Name} is defeated");
-                        var lootDice = diceRolls.Current;
-                        diceRolls.MoveNext();
+                        var lootDice = dice.Roll();
                         var loot = monster.Loot[lootDice - 1];
                         if (loot != null)
                         {
@@ -259,8 +246,7 @@ namespace MonsterHunt
                         Console.WriteLine($"{monster.Name}'s health is {monster.Health}");
                     }
 
-                    var attackRollMonster = diceRolls.Current;
-                    diceRolls.MoveNext();
+                    var attackRollMonster = dice.Roll();
                     var attackMonster = monster.Attack + attackRollMonster - player.Defense;
                     attackMonster = Math.Max(0, attackMonster);
                     if (attackMonster > player.Health)
