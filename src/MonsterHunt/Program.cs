@@ -175,6 +175,34 @@ namespace MonsterHunt
                         Console.WriteLine("Not at a merchant");
                     }
                 }
+                else if (command.StartsWith("sell ", StringComparison.InvariantCultureIgnoreCase))
+                {
+                    var itemName = command.Substring(5);
+                    var item = items.Where(t => t.Name.Equals(itemName, StringComparison.InvariantCultureIgnoreCase)).SingleOrDefault();
+                    if (item == null)
+                    {
+                        Console.WriteLine("Invalid item");
+                    }
+                    else if (currentMerchant == null)
+                    {
+                        Console.WriteLine("Not at a merchant");
+                    }
+                    else if (!player.Inventory.Contains(item))
+                    {
+                        Console.WriteLine("does not have item");
+                    }
+                    else if (!currentMerchant.Requests.Where(t => t.Item == item).Any())
+                    {
+                        Console.WriteLine("Merchant does not request item");
+                    }
+                    else
+                    {
+                        var value = currentMerchant.Requests.Where(t => t.Item == item).Single().Price;
+                        player.Inventory.Remove(item);
+                        player.Coins += value;
+                        Console.WriteLine($"Item sold. You have now {player.Coins}c");
+                    }
+                }
             }
         }
 
