@@ -190,6 +190,17 @@ namespace MonsterHunt
                         Console.WriteLine("Not at a merchant");
                     }
                 }
+                else if (command.Equals("offers", StringComparison.InvariantCultureIgnoreCase))
+                {
+                    if (currentMerchant != null)
+                    {
+                        ShwoOffers(currentMerchant);
+                    }
+                    else
+                    {
+                        Console.WriteLine("Not at a merchant");
+                    }
+                }
                 else if (command.StartsWith("sell ", StringComparison.InvariantCultureIgnoreCase))
                 {
                     var itemName = command.Substring(5);
@@ -382,6 +393,14 @@ namespace MonsterHunt
         private static void ShwoRequests(Merchant merchant)
         {
             foreach (var request in merchant.Requests)
+            {
+                Console.WriteLine($"{request.Item.Name} ({request.Price}c)");
+            }
+        }
+
+        private static void ShwoOffers(Merchant merchant)
+        {
+            foreach (var request in merchant.Offers)
             {
                 Console.WriteLine($"{request.Item.Name} ({request.Price}c)");
             }
