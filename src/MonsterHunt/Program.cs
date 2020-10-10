@@ -12,29 +12,10 @@ namespace MonsterHunt
 
         static void Main(string[] args)
         {
-            var item1 = new Item
-            {
-                Id = Guid.NewGuid(),
-                Name = "Item 1"
-            };
-
-            var item2 = new Item
-            {
-                Id = Guid.NewGuid(),
-                Name = "Item 2"
-            };
-
-            var item3 = new Item
-            {
-                Id = Guid.NewGuid(),
-                Name = "Item 3"
-            };
-
-            var item4 = new Item
-            {
-                Id = Guid.NewGuid(),
-                Name = "Item 4"
-            };
+            var item1 = CreateItem("Item 1");
+            var item2 = CreateItem("Item 2");
+            var item3 = CreateItem("Item 3");
+            var item4 = CreateItem("Item 4");
 
             items = new List<Item> { item1, item2, item3, item4 };
 
@@ -266,6 +247,17 @@ namespace MonsterHunt
             {
                 yield return Console.ReadLine();
             }
+        }
+
+        private static Item CreateItem(string name)
+        {
+            var item = new Item
+            {
+                Id = Guid.NewGuid(),
+                Name = name
+            };
+
+            return item;
         }
 
         private static Town GoToTown(Route route, Player player, Dice dice)
