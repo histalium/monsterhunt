@@ -5,6 +5,9 @@ namespace MonsterHunt
     internal class Merchant
     {
         public string Name { get; set; }
+
         public List<ItemPrice> Requests { get; set; }
+
+        public List<ItemPrice> Offers { get; set; }
     }
 }

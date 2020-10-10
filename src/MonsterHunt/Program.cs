@@ -30,7 +30,13 @@ namespace MonsterHunt
                 Name = "Item 3"
             };
 
-            items = new List<Item> { item1, item2, item3 };
+            var item4 = new Item
+            {
+                Id = Guid.NewGuid(),
+                Name = "Item 4"
+            };
+
+            items = new List<Item> { item1, item2, item3, item4 };
 
             var monster1 = new Monster
             {
@@ -76,6 +82,14 @@ namespace MonsterHunt
                     {
                         Item = item3,
                         Price = 2
+                    }
+                },
+                Offers = new List<ItemPrice>
+                {
+                    new ItemPrice
+                    {
+                        Item = item4,
+                        Price = 5
                     }
                 }
             };
@@ -126,7 +140,8 @@ namespace MonsterHunt
                 Attack = 1,
                 Defense = 2,
                 Health = 30,
-                Inventory = new List<Item>()
+                Inventory = new List<Item>(),
+                Coins = 10
             };
 
             Console.WriteLine($"Welcome in {currentTown.Name}");
@@ -189,7 +204,7 @@ namespace MonsterHunt
                     }
                     else if (!player.Inventory.Contains(item))
                     {
-                        Console.WriteLine("does not have item");
+                        Console.WriteLine("You does not have item");
                     }
                     else if (!currentMerchant.Requests.Where(t => t.Item == item).Any())
                     {
@@ -201,6 +216,34 @@ namespace MonsterHunt
                         player.Inventory.Remove(item);
                         player.Coins += value;
                         Console.WriteLine($"Item sold. You have now {player.Coins}c");
+                    }
+                }
+                else if (command.StartsWith("buy ", StringComparison.InvariantCultureIgnoreCase))
+                {
+                    var itemName = command.Substring(4);
+                    var item = items.Where(t => t.Name.Equals(itemName, StringComparison.InvariantCultureIgnoreCase)).SingleOrDefault();
+                    if (item == null)
+                    {
+                        Console.WriteLine("Invalid item");
+                    }
+                    else if (currentMerchant == null)
+                    {
+                        Console.WriteLine("Not at a merchant");
+                    }
+                    else if (!currentMerchant.Offers.Where(t => t.Item == item).Any())
+                    {
+                        Console.WriteLine("Merchant does not offer item");
+                    }
+                    else if (player.Coins < currentMerchant.Offers.Where(t => t.Item == item).Single().Price)
+                    {
+                        Console.WriteLine("You don't have enough coins");
+                    }
+                    else
+                    {
+                        var value = currentMerchant.Offers.Where(t => t.Item == item).Single().Price;
+                        player.Inventory.Add(item);
+                        player.Coins -= value;
+                        Console.WriteLine($"Bought item. You have now {player.Coins}c");
                     }
                 }
             }
