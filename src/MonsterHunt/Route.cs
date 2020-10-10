@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 
 namespace MonsterHunt
 {
@@ -6,7 +7,7 @@ namespace MonsterHunt
     {
         public Guid Id { get; set; }
 
-        public Town Destination { get; set; }
+        public List<Guid> Towns { get; set; }
 
         public int NumberOfMonsters { get; set; }
 

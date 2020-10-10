@@ -10,8 +10,6 @@ namespace MonsterHunt
 
         public string Name { get; set; }
 
-        public ImmutableList<Route> Routes { get; set; }
-
         public List<Merchant> Merchants { get; set; }
     }
 }

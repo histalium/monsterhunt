@@ -9,6 +9,8 @@ namespace MonsterHunt
     {
         private static List<Item> items;
         private static List<Monster> monsters;
+        private static List<Town> towns;
+        private static List<Route> routes;
 
         static void Main(string[] args)
         {
@@ -84,29 +86,22 @@ namespace MonsterHunt
                 Name = "Town 2"
             };
 
+            towns = new List<Town> { town1, town2 };
+
             var route1 = new Route
             {
                 Id = Guid.NewGuid(),
-                Destination = town2,
+                Towns = new List<Guid>
+                {
+                    town1.Id, town2.Id
+                },
                 NumberOfMonsters = 2,
                 Monsters = new RollResult()
                     .Set(1, 4, monster1.Id)
                     .Set(5, 6, monster2.Id)
             };
 
-            town1.Routes = ImmutableList.Create<Route>().Add(route1);
-
-            var route2 = new Route
-            {
-                Id = Guid.NewGuid(),
-                Destination = town1,
-                NumberOfMonsters = 2,
-                Monsters = new RollResult()
-                    .Set(1, 4, monster1.Id)
-                    .Set(5, 6, monster2.Id)
-            };
-
-            town2.Routes = ImmutableList.Create<Route>().Add(route2);
+            routes = new List<Route> { route1 };
 
             var currentTown = town1;
             Merchant currentMerchant = null;
@@ -135,12 +130,17 @@ namespace MonsterHunt
                 if (command.StartsWith("go to "))
                 {
                     var destination = command.Substring(6);
-                    var route = currentTown.Routes.FirstOrDefault(t => t.Destination.Name.Equals(destination, StringComparison.InvariantCultureIgnoreCase));
-                    if (route != null)
+                    var town = towns.Where(t => t.Name.Equals(destination, StringComparison.InvariantCultureIgnoreCase)).FirstOrDefault();
+                    if (town != null)
                     {
-                        currentTown = GoToTown(route, player, dice);
-                        currentMerchant = null;
-                        continue;
+                        var route = routes.Where(t => t.Towns.Contains(town.Id) && t.Towns.Contains(currentTown.Id)).FirstOrDefault();
+                        if (route != null)
+                        {
+                            GoToTown(route, town, player, dice);
+                            currentTown = town;
+                            currentMerchant = null;
+                            continue;
+                        }
                     }
 
                     var merchant = currentTown.Merchants.FirstOrDefault(t => t.Name.Equals(destination, StringComparison.InvariantCultureIgnoreCase));
@@ -150,7 +150,8 @@ namespace MonsterHunt
                         Console.WriteLine($"Welcome to {merchant.Name}");
                         continue;
                     }
-                    Console.WriteLine("Invalid town");
+
+                    Console.WriteLine("Invalid location");
                 }
                 else if (command.Equals("inventory", StringComparison.InvariantCultureIgnoreCase))
                 {
@@ -256,7 +257,7 @@ namespace MonsterHunt
             return item;
         }
 
-        private static Town GoToTown(Route route, Player player, Dice dice)
+        private static void GoToTown(Route route, Town town, Player player, Dice dice)
         {
             for (var i = 0; i < route.NumberOfMonsters; i++)
             {
@@ -265,9 +266,7 @@ namespace MonsterHunt
                 Battle(player, monster, dice);
             }
 
-            Console.WriteLine($"Welcome in {route.Destination.Name}");
-
-            return route.Destination;
+            Console.WriteLine($"Welcome in {town.Name}");
         }
 
         private static Monster GetMonster(Route route, Dice dice)
