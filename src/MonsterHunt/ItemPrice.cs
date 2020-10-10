@@ -1,8 +1,11 @@
+using System;
+
 namespace MonsterHunt
 {
     internal class ItemPrice
     {
-        public Item Item { get; set; }
+        public Guid ItemId { get; set; }
+
         public int Price { get; set; }
     }
 }

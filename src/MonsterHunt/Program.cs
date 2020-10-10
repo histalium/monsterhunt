@@ -52,12 +52,12 @@ namespace MonsterHunt
                 {
                     new ItemPrice
                     {
-                        Item = item1,
+                        ItemId = item1.Id,
                         Price = 1
                     },
                     new ItemPrice
                     {
-                        Item = item3,
+                        ItemId = item3.Id,
                         Price = 2
                     }
                 },
@@ -65,7 +65,7 @@ namespace MonsterHunt
                 {
                     new ItemPrice
                     {
-                        Item = item4,
+                        ItemId = item4.Id,
                         Price = 5
                     }
                 }
@@ -117,7 +117,7 @@ namespace MonsterHunt
                 Attack = 1,
                 Defense = 2,
                 Health = 30,
-                Inventory = new List<Item>(),
+                Inventory = new List<Guid>(),
                 Coins = 10
             };
 
@@ -190,18 +190,18 @@ namespace MonsterHunt
                     {
                         Console.WriteLine("Not at a merchant");
                     }
-                    else if (!player.Inventory.Contains(item))
+                    else if (!player.Inventory.Contains(item.Id))
                     {
                         Console.WriteLine("You does not have item");
                     }
-                    else if (!currentMerchant.Requests.Where(t => t.Item == item).Any())
+                    else if (!currentMerchant.Requests.Where(t => t.ItemId == item.Id).Any())
                     {
                         Console.WriteLine("Merchant does not request item");
                     }
                     else
                     {
-                        var value = currentMerchant.Requests.Where(t => t.Item == item).Single().Price;
-                        player.Inventory.Remove(item);
+                        var value = currentMerchant.Requests.Where(t => t.ItemId == item.Id).Single().Price;
+                        player.Inventory.Remove(item.Id);
                         player.Coins += value;
                         Console.WriteLine($"Item sold. You have now {player.Coins}c");
                     }
@@ -218,18 +218,18 @@ namespace MonsterHunt
                     {
                         Console.WriteLine("Not at a merchant");
                     }
-                    else if (!currentMerchant.Offers.Where(t => t.Item == item).Any())
+                    else if (!currentMerchant.Offers.Where(t => t.ItemId == item.Id).Any())
                     {
                         Console.WriteLine("Merchant does not offer item");
                     }
-                    else if (player.Coins < currentMerchant.Offers.Where(t => t.Item == item).Single().Price)
+                    else if (player.Coins < currentMerchant.Offers.Where(t => t.ItemId == item.Id).Single().Price)
                     {
                         Console.WriteLine("You don't have enough coins");
                     }
                     else
                     {
-                        var value = currentMerchant.Offers.Where(t => t.Item == item).Single().Price;
-                        player.Inventory.Add(item);
+                        var value = currentMerchant.Offers.Where(t => t.ItemId == item.Id).Single().Price;
+                        player.Inventory.Add(item.Id);
                         player.Coins -= value;
                         Console.WriteLine($"Bought item. You have now {player.Coins}c");
                     }
@@ -317,7 +317,7 @@ namespace MonsterHunt
                         if (loot != null)
                         {
                             Console.WriteLine($"loot: {loot.Name}");
-                            player.Inventory.Add(loot);
+                            player.Inventory.Add(loot.Id);
                         }
                         break;
                     }
@@ -372,8 +372,9 @@ namespace MonsterHunt
         {
             Console.WriteLine("Inventory");
 
-            foreach (var item in player.Inventory)
+            foreach (var itemId in player.Inventory)
             {
+                var item = FindItem(itemId);
                 Console.WriteLine(item.Name);
             }
         }
@@ -382,16 +383,23 @@ namespace MonsterHunt
         {
             foreach (var request in merchant.Requests)
             {
-                Console.WriteLine($"{request.Item.Name} ({request.Price}c)");
+                var item = FindItem(request.ItemId);
+                Console.WriteLine($"{item.Name} ({request.Price}c)");
             }
         }
 
         private static void ShwoOffers(Merchant merchant)
         {
-            foreach (var request in merchant.Offers)
+            foreach (var offer in merchant.Offers)
             {
-                Console.WriteLine($"{request.Item.Name} ({request.Price}c)");
+                var item = FindItem(offer.ItemId);
+                Console.WriteLine($"{item.Name} ({offer.Price}c)");
             }
+        }
+
+        private static Item FindItem(Guid itemId)
+        {
+            return items.Where(t => t.Id == itemId).First();
         }
     }
 }
