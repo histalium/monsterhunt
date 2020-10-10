@@ -26,11 +26,9 @@ namespace MonsterHunt
                 Attack = 0,
                 Defense = 1,
                 Health = 15,
-                Loot = new RollResult<Guid?>
-                {
-                    Roll1 = item1.Id,
-                    Roll2 = item2.Id
-                }
+                Loot = new RollResult()
+                    .Set(1, item1.Id)
+                    .Set(2, item2.Id)
             };
 
             var monster2 = new Monster
@@ -40,11 +38,9 @@ namespace MonsterHunt
                 Attack = 1,
                 Defense = 1,
                 Health = 12,
-                Loot = new RollResult<Guid?>
-                {
-                    Roll1 = item1.Id,
-                    Roll2 = item3.Id
-                }
+                Loot = new RollResult()
+                    .Set(1, item1.Id)
+                    .Set(2, item3.Id)
             };
 
             monsters = new List<Monster> { monster1, monster2 };
@@ -93,7 +89,7 @@ namespace MonsterHunt
                 Id = Guid.NewGuid(),
                 Destination = town2,
                 NumberOfMonsters = 2,
-                Monsters = new RollResult<Guid?>()
+                Monsters = new RollResult()
                     .Set(1, 4, monster1.Id)
                     .Set(5, 6, monster2.Id)
             };
@@ -105,7 +101,7 @@ namespace MonsterHunt
                 Id = Guid.NewGuid(),
                 Destination = town1,
                 NumberOfMonsters = 2,
-                Monsters = new RollResult<Guid?>()
+                Monsters = new RollResult()
                     .Set(1, 4, monster1.Id)
                     .Set(5, 6, monster2.Id)
             };

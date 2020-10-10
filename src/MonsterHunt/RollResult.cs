@@ -1,79 +1,36 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace MonsterHunt
 {
-    internal class RollResult<T>
+    internal class RollResult
     {
-        public T Roll1 { get; set; }
-        public T Roll2 { get; set; }
-        public T Roll3 { get; set; }
-        public T Roll4 { get; set; }
-        public T Roll5 { get; set; }
-        public T Roll6 { get; set; }
+        private readonly Dictionary<int, Guid?> results;
 
-        public T GetResult(int roll)
+        public RollResult()
         {
-            switch (roll)
-            {
-                case 1:
-                    return Roll1;
-
-                case 2:
-                    return Roll2;
-
-                case 3:
-                    return Roll3;
-
-                case 4:
-                    return Roll4;
-
-                case 5:
-                    return Roll5;
-
-                case 6:
-                    return Roll6;
-
-                default:
-                    throw new Exception("invalid roll");
-            }
+            results = Enumerable.Range(1, 6)
+                .ToDictionary(t => t, t => (Guid?)null);
         }
 
-        public RollResult<T> Set(int roll, T value)
+        public Guid? GetResult(int roll)
         {
-            switch (roll)
-            {
-                case 1:
-                    Roll1 = value;
-                    break;
+            ValidateRoll(roll);
 
-                case 2:
-                    Roll2 = value;
-                    break;
+            return results[roll];
+        }
 
-                case 3:
-                    Roll3 = value;
-                    break;
+        public RollResult Set(int roll, Guid? value)
+        {
+            ValidateRoll(roll);
 
-                case 4:
-                    Roll4 = value;
-                    break;
-
-                case 5:
-                    Roll5 = value;
-                    break;
-
-                case 6:
-                    Roll6 = value;
-                    break;
-
-                default:
-                    throw new Exception("invalid roll");
-            }
+            results[roll] = value;
 
             return this;
         }
 
-        public RollResult<T> Set(int rollMin, int rollMax, T value)
+        public RollResult Set(int rollMin, int rollMax, Guid? value)
         {
             for (var i = rollMin; i <= rollMax; i++)
             {
@@ -81,6 +38,14 @@ namespace MonsterHunt
             }
 
             return this;
+        }
+
+        private static void ValidateRoll(int roll)
+        {
+            if (roll < 1 || roll > 6)
+            {
+                throw new Exception("invalid roll");
+            }
         }
     }
 }

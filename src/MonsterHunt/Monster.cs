@@ -14,6 +14,6 @@ namespace MonsterHunt
 
         internal int Health { get; set; }
 
-        internal RollResult<Guid?> Loot { get; set; }
+        internal RollResult Loot { get; set; }
     }
 }

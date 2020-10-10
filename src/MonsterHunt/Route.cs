@@ -10,6 +10,6 @@ namespace MonsterHunt
 
         public int NumberOfMonsters { get; set; }
 
-        public RollResult<Guid?> Monsters { get; set; }
+        public RollResult Monsters { get; set; }
     }
 }
