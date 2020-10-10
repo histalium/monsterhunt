@@ -11,6 +11,7 @@ namespace MonsterHunt
         private static List<Monster> monsters;
         private static List<Town> towns;
         private static List<Route> routes;
+        private static List<Merchant> merchants;
 
         static void Main(string[] args)
         {
@@ -47,37 +48,10 @@ namespace MonsterHunt
 
             monsters = new List<Monster> { monster1, monster2 };
 
-            var merchant1 = new Merchant
-            {
-                Name = "Merchant 1",
-                Requests = new List<ItemPrice>
-                {
-                    new ItemPrice
-                    {
-                        ItemId = item1.Id,
-                        Price = 1
-                    },
-                    new ItemPrice
-                    {
-                        ItemId = item3.Id,
-                        Price = 2
-                    }
-                },
-                Offers = new List<ItemPrice>
-                {
-                    new ItemPrice
-                    {
-                        ItemId = item4.Id,
-                        Price = 5
-                    }
-                }
-            };
-
             var town1 = new Town
             {
                 Id = Guid.NewGuid(),
-                Name = "Town 1",
-                Merchants = new List<Merchant> { merchant1 }
+                Name = "Town 1"
             };
 
             var town2 = new Town
@@ -102,6 +76,35 @@ namespace MonsterHunt
             };
 
             routes = new List<Route> { route1 };
+
+            var merchant1 = new Merchant
+            {
+                Name = "Merchant 1",
+                TownId = town1.Id,
+                Requests = new List<ItemPrice>
+                {
+                    new ItemPrice
+                    {
+                        ItemId = item1.Id,
+                        Price = 1
+                    },
+                    new ItemPrice
+                    {
+                        ItemId = item3.Id,
+                        Price = 2
+                    }
+                },
+                Offers = new List<ItemPrice>
+                {
+                    new ItemPrice
+                    {
+                        ItemId = item4.Id,
+                        Price = 5
+                    }
+                }
+            };
+
+            merchants = new List<Merchant> { merchant1 };
 
             var currentTown = town1;
             Merchant currentMerchant = null;
@@ -143,7 +146,7 @@ namespace MonsterHunt
                         }
                     }
 
-                    var merchant = currentTown.Merchants.FirstOrDefault(t => t.Name.Equals(destination, StringComparison.InvariantCultureIgnoreCase));
+                    var merchant = merchants.Where(t => t.Name.Equals(destination, StringComparison.InvariantCultureIgnoreCase) && t.TownId == currentTown.Id).FirstOrDefault();
                     if (merchant != null)
                     {
                         currentMerchant = merchant;
