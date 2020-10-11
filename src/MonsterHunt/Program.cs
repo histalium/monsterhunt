@@ -18,7 +18,7 @@ namespace MonsterHunt
             var item1 = CreateItem("Item 1");
             var item2 = CreateItem("Item 2");
             var item3 = CreateItem("Item 3");
-            var item4 = CreateItem("Item 4");
+            var item4 = CreateHealthPotion("Health potion 1", 5);
 
             items = new List<Item> { item1, item2, item3, item4 };
 
@@ -115,6 +115,7 @@ namespace MonsterHunt
                 Attack = 1,
                 Defense = 2,
                 Health = 30,
+                MaxHealth = 30,
                 Inventory = new List<Guid>(),
                 Coins = 10
             };
@@ -238,6 +239,25 @@ namespace MonsterHunt
                         Console.WriteLine($"Bought item. You have now {player.Coins}c");
                     }
                 }
+                else if (command.StartsWith("use ", StringComparison.InvariantCultureIgnoreCase))
+                {
+                    var itemName = command.Substring(4);
+                    var item = items.Where(t => t.Name.Equals(itemName, StringComparison.InvariantCultureIgnoreCase)).SingleOrDefault();
+                    if (item == null)
+                    {
+                        Console.WriteLine("Invalid item");
+                    }
+                    else if (!player.Inventory.Contains(item.Id))
+                    {
+                        Console.WriteLine("You don't have this item");
+                    }
+                    else if (item is HealthPotion hp)
+                    {
+                        player.Inventory.Remove(item.Id);
+                        player.Health = Math.Min(player.MaxHealth, player.Health + hp.Health);
+                        Console.WriteLine($"You have {player.Health} health");
+                    }
+                }
             }
         }
 
@@ -255,6 +275,18 @@ namespace MonsterHunt
             {
                 Id = Guid.NewGuid(),
                 Name = name
+            };
+
+            return item;
+        }
+
+        private static Item CreateHealthPotion(string name, int health)
+        {
+            var item = new HealthPotion
+            {
+                Id = Guid.NewGuid(),
+                Name = name,
+                Health = health
             };
 
             return item;

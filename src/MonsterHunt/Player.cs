@@ -13,6 +13,8 @@ namespace MonsterHunt
 
         internal int Health { get; set; }
 
+        internal int MaxHealth { get; set; }
+
         internal List<Guid> Inventory { get; set; }
 
         internal int Coins { get; set; }
