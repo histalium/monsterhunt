@@ -202,7 +202,7 @@ namespace MonsterHunt
                     }
                     else if (command.Equals("inventory", StringComparison.InvariantCultureIgnoreCase))
                     {
-                        ShowInventory(game.Player);
+                        ShowInventory(game);
                     }
                     else if (command.Equals("requests", StringComparison.InvariantCultureIgnoreCase))
                     {
@@ -340,11 +340,9 @@ namespace MonsterHunt
             return item;
         }
 
-        private static void ShowInventory(Player player)
+        private static void ShowInventory(MonsterHuntGame game)
         {
-            Console.WriteLine("Inventory");
-
-            foreach (var itemId in player.Inventory)
+            foreach (var itemId in game.Player.Inventory)
             {
                 var item = FindItem(itemId);
                 Console.WriteLine(item.Name);
