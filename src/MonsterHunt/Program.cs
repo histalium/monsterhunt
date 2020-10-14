@@ -106,9 +106,7 @@ namespace MonsterHunt
 
             merchants = new List<Merchant> { merchant1 };
 
-            Merchant currentMerchant = null;
-
-            var game = new MonsterHuntGame(towns, routes, monsters, items);
+            var game = new MonsterHuntGame(towns, routes, monsters, items, merchants);
 
             Console.WriteLine($"Welcome in {game.CurrentTown.Name}");
 
@@ -149,12 +147,24 @@ namespace MonsterHunt
                             Console.WriteLine("No route to town");
                         }
 
-                        var merchant = merchants.Where(t => t.Name.Equals(destination, StringComparison.InvariantCultureIgnoreCase) && t.TownId == game.CurrentTown.Id).FirstOrDefault();
-                        if (merchant != null)
+                        try
                         {
-                            currentMerchant = merchant;
-                            Console.WriteLine($"Welcome to {merchant.Name}");
+                            game.GoToMerchant(destination);
+                            Console.WriteLine($"Welcome to {game.CurrentMerchant.Name}");
                             continue;
+                        }
+                        catch (InvalidMerchantException)
+                        {
+                            // do nothing. try other command.
+                        }
+                        catch (SameMerchantException)
+                        {
+                            Console.WriteLine("Same merchant as current");
+                            continue;
+                        }
+                        catch (MerchantNotInTownException)
+                        {
+                            // do nothing. try other command.
                         }
 
                         Console.WriteLine("Invalid location");
@@ -206,9 +216,9 @@ namespace MonsterHunt
                     }
                     else if (command.Equals("requests", StringComparison.InvariantCultureIgnoreCase))
                     {
-                        if (currentMerchant != null)
+                        if (game.CurrentMerchant != null)
                         {
-                            ShwoRequests(currentMerchant);
+                            ShwoRequests(game.CurrentMerchant);
                         }
                         else
                         {
@@ -217,9 +227,9 @@ namespace MonsterHunt
                     }
                     else if (command.Equals("offers", StringComparison.InvariantCultureIgnoreCase))
                     {
-                        if (currentMerchant != null)
+                        if (game.CurrentMerchant != null)
                         {
-                            ShwoOffers(currentMerchant);
+                            ShwoOffers(game.CurrentMerchant);
                         }
                         else
                         {
@@ -234,7 +244,7 @@ namespace MonsterHunt
                         {
                             Console.WriteLine("Invalid item");
                         }
-                        else if (currentMerchant == null)
+                        else if (game.CurrentMerchant == null)
                         {
                             Console.WriteLine("Not at a merchant");
                         }
@@ -242,13 +252,13 @@ namespace MonsterHunt
                         {
                             Console.WriteLine("You does not have item");
                         }
-                        else if (!currentMerchant.Requests.Where(t => t.ItemId == item.Id).Any())
+                        else if (!game.CurrentMerchant.Requests.Where(t => t.ItemId == item.Id).Any())
                         {
                             Console.WriteLine("Merchant does not request item");
                         }
                         else
                         {
-                            var value = currentMerchant.Requests.Where(t => t.ItemId == item.Id).Single().Price;
+                            var value = game.CurrentMerchant.Requests.Where(t => t.ItemId == item.Id).Single().Price;
                             game.Player.Inventory.Remove(item.Id);
                             game.Player.Coins += value;
                             Console.WriteLine($"Item sold. You have now {game.Player.Coins}c");
@@ -262,21 +272,21 @@ namespace MonsterHunt
                         {
                             Console.WriteLine("Invalid item");
                         }
-                        else if (currentMerchant == null)
+                        else if (game.CurrentMerchant == null)
                         {
                             Console.WriteLine("Not at a merchant");
                         }
-                        else if (!currentMerchant.Offers.Where(t => t.ItemId == item.Id).Any())
+                        else if (!game.CurrentMerchant.Offers.Where(t => t.ItemId == item.Id).Any())
                         {
                             Console.WriteLine("Merchant does not offer item");
                         }
-                        else if (game.Player.Coins < currentMerchant.Offers.Where(t => t.ItemId == item.Id).Single().Price)
+                        else if (game.Player.Coins < game.CurrentMerchant.Offers.Where(t => t.ItemId == item.Id).Single().Price)
                         {
                             Console.WriteLine("You don't have enough coins");
                         }
                         else
                         {
-                            var value = currentMerchant.Offers.Where(t => t.ItemId == item.Id).Single().Price;
+                            var value = game.CurrentMerchant.Offers.Where(t => t.ItemId == item.Id).Single().Price;
                             game.Player.Inventory.Add(item.Id);
                             game.Player.Coins -= value;
                             Console.WriteLine($"Bought item. You have now {game.Player.Coins}c");

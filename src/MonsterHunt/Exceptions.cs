@@ -26,4 +26,19 @@ namespace MonsterHunt
     {
         public NotInBattleModeException() : base("Not in battle mode") { }
     }
+
+    internal class InvalidMerchantException : Exception
+    {
+        public InvalidMerchantException() : base("Invalid merchant") { }
+    }
+
+    internal class SameMerchantException : Exception
+    {
+        public SameMerchantException() : base("Merchant same as current merchant") { }
+    }
+
+    internal class MerchantNotInTownException : Exception
+    {
+        public MerchantNotInTownException() : base("Merchant not in town") { }
+    }
 }

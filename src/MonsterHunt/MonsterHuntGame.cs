@@ -7,21 +7,23 @@ namespace MonsterHunt
     internal class MonsterHuntGame
     {
         private readonly List<Town> towns;
-
         private readonly List<Route> routes;
-
         private readonly List<Monster> monsters;
         private readonly List<Item> items;
+        private readonly List<Merchant> merchants;
+
         private readonly Dice dice = new Dice();
 
         private IEnumerator<Monster> encounters;
 
-        public MonsterHuntGame(List<Town> towns, List<Route> routes, List<Monster> monsters, List<Item> items)
+        public MonsterHuntGame(List<Town> towns, List<Route> routes, List<Monster> monsters, List<Item> items,
+            List<Merchant> merchants)
         {
             this.towns = towns;
             this.routes = routes;
             this.monsters = monsters;
             this.items = items;
+            this.merchants = merchants;
             CurrentTown = FindTown("town 1");
             Player = CreatePlayer();
         }
@@ -29,6 +31,8 @@ namespace MonsterHunt
         public Town CurrentTown { get; private set; }
 
         public Monster CurrentMonster { get; private set; }
+
+        public Merchant CurrentMerchant { get; private set; }
 
         public Player Player { get; }
 
@@ -91,6 +95,7 @@ namespace MonsterHunt
             encounters = BuildEncounters(route).GetEnumerator();
             CurrentTown = town;
             CurrentMonster = encounters.Next();
+            CurrentMerchant = null;
 
             if (CurrentMonster == null)
             {
@@ -198,6 +203,42 @@ namespace MonsterHunt
             {
                 Player.Health -= attackMonster;
             }
+        }
+
+        internal void GoToMerchant(string merchantName)
+        {
+            if (encounters != null)
+            {
+                throw new InBattleModeException();
+            }
+
+            var merchant = FindMerchant(merchantName);
+
+            if (merchant == null)
+            {
+                throw new InvalidMerchantException();
+            }
+
+            if (merchant == CurrentMerchant)
+            {
+                throw new SameMerchantException();
+            }
+
+            if (merchant.TownId != CurrentTown.Id)
+            {
+                throw new MerchantNotInTownException();
+            }
+
+            CurrentMerchant = merchant;
+        }
+
+        private Merchant FindMerchant(string name)
+        {
+            var merchant = merchants
+                .Where(t => AreEqual(t.Name, name))
+                .SingleOrDefault();
+
+            return merchant;
         }
 
         private Item GetLoot()
