@@ -107,6 +107,7 @@ namespace MonsterHunt
             merchants = new List<Merchant> { merchant1 };
 
             var game = new MonsterHuntGame(towns, routes, monsters, items, merchants);
+            game.MonsterDefeated += MonsterDefeated;
 
             Console.WriteLine($"Welcome in {game.CurrentTown.Name}");
 
@@ -192,7 +193,6 @@ namespace MonsterHunt
                             else
                             {
                                 //todo event
-                                Console.WriteLine($"{monster.Name} is defeated");
 
                                 if (game.CurrentMonster != null)
                                 {
@@ -348,6 +348,15 @@ namespace MonsterHunt
             };
 
             return item;
+        }
+
+        private static void MonsterDefeated(object sender, MonsterDefeatedEventArgs e)
+        {
+            Console.WriteLine($"{e.Monster.Name} is defeated");
+            if (e.Loot.Any())
+            {
+                Console.WriteLine($"Loot: {string.Join(", ", e.Loot.Select(t => t.Name))}");
+            }
         }
 
         private static void ShowInventory(MonsterHuntGame game)

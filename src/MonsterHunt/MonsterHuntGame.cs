@@ -16,6 +16,8 @@ namespace MonsterHunt
 
         private IEnumerator<Monster> encounters;
 
+        public event EventHandler<MonsterDefeatedEventArgs> MonsterDefeated;
+
         public MonsterHuntGame(List<Town> towns, List<Route> routes, List<Monster> monsters, List<Item> items,
             List<Merchant> merchants)
         {
@@ -176,12 +178,12 @@ namespace MonsterHunt
             if (CurrentMonster.Health == 0)
             {
                 var loot = GetLoot();
-                if (loot != null)
+                foreach (var item in loot)
                 {
-                    //todo event
-                    Console.WriteLine($"loot: {loot.Name}");
-                    Player.Inventory.Add(loot.Id);
+                    Player.Inventory.Add(item.Id);
                 }
+
+                MonsterDefeated?.Invoke(this, new MonsterDefeatedEventArgs(CurrentMonster, loot));
 
                 CurrentMonster = encounters.Next();
                 if (CurrentMonster == null)
@@ -241,18 +243,18 @@ namespace MonsterHunt
             return merchant;
         }
 
-        private Item GetLoot()
+        private List<Item> GetLoot()
         {
             var lootDice = dice.Roll();
             var lootId = CurrentMonster.Loot.GetResult(lootDice);
 
             if (!lootId.HasValue)
             {
-                return null;
+                return new List<Item>();
             }
 
             var loot = items.Where(t => t.Id == lootId).Single();
-            return loot;
+            return new List<Item> { loot };
         }
     }
 }
