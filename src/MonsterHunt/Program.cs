@@ -111,6 +111,16 @@ namespace MonsterHunt
 
             Console.WriteLine($"Welcome in {game.CurrentTown.Name}");
 
+            Dictionary<string, Action<string>> commands = new Dictionary<string, Action<string>>();
+            commands.Add("go to ", GetGoToCommand(game));
+            commands.Add("attack", GeAttackCommand(game));
+            commands.Add("inventory", GetInventoryCommand(game));
+            commands.Add("requests", GetRequestsCommand(game));
+            commands.Add("offers", GetOffersCommand(game));
+            commands.Add("sell ", GetSellCommand(game));
+            commands.Add("buy ", GetBuyCommand(game));
+            commands.Add("use ", GetUseCommand(game));
+
             foreach (var command in ReadLines())
             {
                 if (command.Equals("quit", StringComparison.InvariantCultureIgnoreCase))
@@ -119,197 +129,17 @@ namespace MonsterHunt
                 }
                 try
                 {
-                    if (command.StartsWith("go to "))
-                    {
-                        var destination = command.Substring(6);
-                        try
-                        {
-                            game.GoToTown(destination);
+                    var c = commands
+                        .Where(t => command.StartsWith(t.Key, StringComparison.InvariantCultureIgnoreCase))
+                        .FirstOrDefault();
 
-                            if (game.CurrentMonster != null)
-                            {
-                                //todo event
-                                Console.WriteLine($"You encounter a {game.CurrentMonster.Name}");
-                            }
-
-                            continue;
-                        }
-                        catch (InvalidTownException)
-                        {
-                            // do nothing. try other command.
-                        }
-                        catch (SameTownException)
-                        {
-                            Console.WriteLine("Same town as current");
-                            continue;
-                        }
-                        catch (NoRouteToTownException)
-                        {
-                            Console.WriteLine("No route to town");
-                        }
-
-                        try
-                        {
-                            game.GoToMerchant(destination);
-                            Console.WriteLine($"Welcome to {game.CurrentMerchant.Name}");
-                            continue;
-                        }
-                        catch (InvalidMerchantException)
-                        {
-                            // do nothing. try other command.
-                        }
-                        catch (SameMerchantException)
-                        {
-                            Console.WriteLine("Same merchant as current");
-                            continue;
-                        }
-                        catch (MerchantNotInTownException)
-                        {
-                            // do nothing. try other command.
-                        }
-
-                        Console.WriteLine("Invalid location");
-                    }
-                    else if (command.Equals("attack", StringComparison.InvariantCultureIgnoreCase))
+                    if (c.Key != null)
                     {
-                        try
-                        {
-                            var monster = game.CurrentMonster;
-                            game.Attack();
-                            if (game.CurrentMonster == monster)
-                            {
-                                Console.WriteLine($"{game.CurrentMonster.Name}'s health is {game.CurrentMonster.Health}");
-
-                                if (game.Player.Health == 0)
-                                {
-                                    //todo event
-                                    Console.WriteLine("You are defeated");
-                                }
-                                else
-                                {
-                                    Console.WriteLine($"Your health is {game.Player.Health}");
-                                }
-                            }
-                            else
-                            {
-                                //todo event
-
-                                if (game.CurrentMonster != null)
-                                {
-                                    //todo event
-                                    Console.WriteLine($"You encounter a {game.CurrentMonster.Name}");
-                                }
-                                else
-                                {
-                                    Console.WriteLine($"Welcome in {game.CurrentTown.Name}");
-                                }
-                            }
-                        }
-                        catch (NotInBattleModeException)
-                        {
-                            Console.WriteLine("You are not in a battle");
-                        }
+                        c.Value(command.Substring(c.Key.Length));
                     }
-                    else if (command.Equals("inventory", StringComparison.InvariantCultureIgnoreCase))
+                    else
                     {
-                        ShowInventory(game);
-                    }
-                    else if (command.Equals("requests", StringComparison.InvariantCultureIgnoreCase))
-                    {
-                        if (game.CurrentMerchant != null)
-                        {
-                            ShwoRequests(game.CurrentMerchant);
-                        }
-                        else
-                        {
-                            Console.WriteLine("Not at a merchant");
-                        }
-                    }
-                    else if (command.Equals("offers", StringComparison.InvariantCultureIgnoreCase))
-                    {
-                        if (game.CurrentMerchant != null)
-                        {
-                            ShwoOffers(game.CurrentMerchant);
-                        }
-                        else
-                        {
-                            Console.WriteLine("Not at a merchant");
-                        }
-                    }
-                    else if (command.StartsWith("sell ", StringComparison.InvariantCultureIgnoreCase))
-                    {
-                        var itemName = command.Substring(5);
-                        var item = items.Where(t => t.Name.Equals(itemName, StringComparison.InvariantCultureIgnoreCase)).SingleOrDefault();
-                        if (item == null)
-                        {
-                            Console.WriteLine("Invalid item");
-                        }
-                        else if (game.CurrentMerchant == null)
-                        {
-                            Console.WriteLine("Not at a merchant");
-                        }
-                        else if (!game.Player.Inventory.Contains(item.Id))
-                        {
-                            Console.WriteLine("You does not have item");
-                        }
-                        else if (!game.CurrentMerchant.Requests.Where(t => t.ItemId == item.Id).Any())
-                        {
-                            Console.WriteLine("Merchant does not request item");
-                        }
-                        else
-                        {
-                            var value = game.CurrentMerchant.Requests.Where(t => t.ItemId == item.Id).Single().Price;
-                            game.Player.Inventory.Remove(item.Id);
-                            game.Player.Coins += value;
-                            Console.WriteLine($"Item sold. You have now {game.Player.Coins}c");
-                        }
-                    }
-                    else if (command.StartsWith("buy ", StringComparison.InvariantCultureIgnoreCase))
-                    {
-                        var itemName = command.Substring(4);
-                        var item = items.Where(t => t.Name.Equals(itemName, StringComparison.InvariantCultureIgnoreCase)).SingleOrDefault();
-                        if (item == null)
-                        {
-                            Console.WriteLine("Invalid item");
-                        }
-                        else if (game.CurrentMerchant == null)
-                        {
-                            Console.WriteLine("Not at a merchant");
-                        }
-                        else if (!game.CurrentMerchant.Offers.Where(t => t.ItemId == item.Id).Any())
-                        {
-                            Console.WriteLine("Merchant does not offer item");
-                        }
-                        else if (game.Player.Coins < game.CurrentMerchant.Offers.Where(t => t.ItemId == item.Id).Single().Price)
-                        {
-                            Console.WriteLine("You don't have enough coins");
-                        }
-                        else
-                        {
-                            var value = game.CurrentMerchant.Offers.Where(t => t.ItemId == item.Id).Single().Price;
-                            game.Player.Inventory.Add(item.Id);
-                            game.Player.Coins -= value;
-                            Console.WriteLine($"Bought item. You have now {game.Player.Coins}c");
-                        }
-                    }
-                    else if (command.StartsWith("use ", StringComparison.InvariantCultureIgnoreCase))
-                    {
-                        var itemName = command.Substring(4);
-                        var item = items.Where(t => t.Name.Equals(itemName, StringComparison.InvariantCultureIgnoreCase)).SingleOrDefault();
-                        if (item == null)
-                        {
-                            Console.WriteLine("Invalid item");
-                        }
-                        else if (!game.Player.Inventory.Contains(item.Id))
-                        {
-                            Console.WriteLine("You don't have this item");
-                        }
-                        else if (item is HealthPotion hp)
-                        {
-                            game.Player.Inventory.Remove(item.Id);
-                            game.Player.Health = Math.Min(game.Player.MaxHealth, game.Player.Health + hp.Health);
-                            Console.WriteLine($"You have {game.Player.Health} health");
-                        }
+                        Console.WriteLine("Unknown command");
                     }
                 }
                 catch (InBattleModeException)
@@ -350,6 +180,108 @@ namespace MonsterHunt
             return item;
         }
 
+        private static Action<string> GetGoToCommand(MonsterHuntGame game)
+        {
+            Action<string> command = (destination) =>
+            {
+                try
+                {
+                    game.GoToTown(destination);
+
+                    if (game.CurrentMonster != null)
+                    {
+                        //todo event
+                        Console.WriteLine($"You encounter a {game.CurrentMonster.Name}");
+                    }
+
+                    return;
+                }
+                catch (InvalidTownException)
+                {
+                    // do nothing. try other command.
+                }
+                catch (SameTownException)
+                {
+                    Console.WriteLine("Same town as current");
+                    return;
+                }
+                catch (NoRouteToTownException)
+                {
+                    Console.WriteLine("No route to town");
+                }
+
+                try
+                {
+                    game.GoToMerchant(destination);
+                    Console.WriteLine($"Welcome to {game.CurrentMerchant.Name}");
+                    return;
+                }
+                catch (InvalidMerchantException)
+                {
+                    // do nothing. try other command.
+                }
+                catch (SameMerchantException)
+                {
+                    Console.WriteLine("Same merchant as current");
+                    return;
+                }
+                catch (MerchantNotInTownException)
+                {
+                    // do nothing. try other command.
+                }
+
+                Console.WriteLine("Invalid location");
+            };
+
+            return command;
+        }
+
+        private static Action<string> GeAttackCommand(MonsterHuntGame game)
+        {
+            Action<string> command = (v) =>
+            {
+                try
+                {
+                    var monster = game.CurrentMonster;
+                    game.Attack();
+                    if (game.CurrentMonster == monster)
+                    {
+                        Console.WriteLine($"{game.CurrentMonster.Name}'s health is {game.CurrentMonster.Health}");
+
+                        if (game.Player.Health == 0)
+                        {
+                            //todo event
+                            Console.WriteLine("You are defeated");
+                        }
+                        else
+                        {
+                            Console.WriteLine($"Your health is {game.Player.Health}");
+                        }
+                    }
+                    else
+                    {
+                        //todo event
+
+                        if (game.CurrentMonster != null)
+                        {
+                            //todo event
+                            Console.WriteLine($"You encounter a {game.CurrentMonster.Name}");
+                        }
+                        else
+                        {
+                            Console.WriteLine($"Welcome in {game.CurrentTown.Name}");
+                        }
+                    }
+                }
+                catch (NotInBattleModeException)
+                {
+                    Console.WriteLine("You are not in a battle");
+                }
+            };
+
+            return command;
+        }
+
         private static void MonsterDefeated(object sender, MonsterDefeatedEventArgs e)
         {
             Console.WriteLine($"{e.Monster.Name} is defeated");
@@ -359,36 +291,157 @@ namespace MonsterHunt
             }
         }
 
-        private static void ShowInventory(MonsterHuntGame game)
+        private static Action<string> GetInventoryCommand(MonsterHuntGame game)
         {
-            foreach (var itemId in game.Player.Inventory)
+            Action<string> command = (v) =>
             {
-                var item = FindItem(itemId);
-                Console.WriteLine(item.Name);
-            }
+                foreach (var itemId in game.Player.Inventory)
+                {
+                    var item = FindItem(itemId);
+                    Console.WriteLine(item.Name);
+                }
+            };
+
+            return command;
         }
 
-        private static void ShwoRequests(Merchant merchant)
+        private static Action<string> GetRequestsCommand(MonsterHuntGame game)
         {
-            foreach (var request in merchant.Requests)
+            Action<string> command = (v) =>
             {
-                var item = FindItem(request.ItemId);
-                Console.WriteLine($"{item.Name} ({request.Price}c)");
-            }
+                if (game.CurrentMerchant != null)
+                {
+                    var merchant = game.CurrentMerchant;
+                    foreach (var request in merchant.Requests)
+                    {
+                        var item = FindItem(request.ItemId);
+                        Console.WriteLine($"{item.Name} ({request.Price}c)");
+                    }
+                }
+                else
+                {
+                    Console.WriteLine("Not at a merchant");
+                }
+            };
+
+            return command;
         }
 
-        private static void ShwoOffers(Merchant merchant)
+        private static Action<string> GetOffersCommand(MonsterHuntGame game)
         {
-            foreach (var offer in merchant.Offers)
+            Action<string> command = (v) =>
             {
-                var item = FindItem(offer.ItemId);
-                Console.WriteLine($"{item.Name} ({offer.Price}c)");
-            }
+                if (game.CurrentMerchant != null)
+                {
+                    var merchant = game.CurrentMerchant;
+                    foreach (var offer in merchant.Offers)
+                    {
+                        var item = FindItem(offer.ItemId);
+                        Console.WriteLine($"{item.Name} ({offer.Price}c)");
+                    }
+                }
+                else
+                {
+                    Console.WriteLine("Not at a merchant");
+                }
+            };
+
+            return command;
         }
 
         private static Item FindItem(Guid itemId)
         {
             return items.Where(t => t.Id == itemId).First();
+        }
+
+        private static Action<string> GetSellCommand(MonsterHuntGame game)
+        {
+            Action<string> command = (itemName) =>
+            {
+                var item = items.Where(t => t.Name.Equals(itemName, StringComparison.InvariantCultureIgnoreCase)).SingleOrDefault();
+                if (item == null)
+                {
+                    Console.WriteLine("Invalid item");
+                }
+                else if (game.CurrentMerchant == null)
+                {
+                    Console.WriteLine("Not at a merchant");
+                }
+                else if (!game.Player.Inventory.Contains(item.Id))
+                {
+                    Console.WriteLine("You does not have item");
+                }
+                else if (!game.CurrentMerchant.Requests.Where(t => t.ItemId == item.Id).Any())
+                {
+                    Console.WriteLine("Merchant does not request item");
+                }
+                else
+                {
+                    var value = game.CurrentMerchant.Requests.Where(t => t.ItemId == item.Id).Single().Price;
+                    game.Player.Inventory.Remove(item.Id);
+                    game.Player.Coins += value;
+                    Console.WriteLine($"Item sold. You have now {game.Player.Coins}c");
+                }
+            };
+
+            return command;
+        }
+
+        private static Action<string> GetBuyCommand(MonsterHuntGame game)
+        {
+            Action<string> command = (itemName) =>
+            {
+                var item = items.Where(t => t.Name.Equals(itemName, StringComparison.InvariantCultureIgnoreCase)).SingleOrDefault();
+                if (item == null)
+                {
+                    Console.WriteLine("Invalid item");
+                }
+                else if (game.CurrentMerchant == null)
+                {
+                    Console.WriteLine("Not at a merchant");
+                }
+                else if (!game.CurrentMerchant.Offers.Where(t => t.ItemId == item.Id).Any())
+                {
+                    Console.WriteLine("Merchant does not offer item");
+                }
+                else if (game.Player.Coins < game.CurrentMerchant.Offers.Where(t => t.ItemId == item.Id).Single().Price)
+                {
+                    Console.WriteLine("You don't have enough coins");
+                }
+                else
+                {
+                    var value = game.CurrentMerchant.Offers.Where(t => t.ItemId == item.Id).Single().Price;
+                    game.Player.Inventory.Add(item.Id);
+                    game.Player.Coins -= value;
+                    Console.WriteLine($"Bought item. You have now {game.Player.Coins}c");
+                }
+            };
+
+            return command;
+        }
+
+        private static Action<string> GetUseCommand(MonsterHuntGame game)
+        {
+            Action<string> command = (itemName) =>
+            {
+                var item = items.Where(t => t.Name.Equals(itemName, StringComparison.InvariantCultureIgnoreCase)).SingleOrDefault();
+                if (item == null)
+                {
+                    Console.WriteLine("Invalid item");
+                }
+                else if (!game.Player.Inventory.Contains(item.Id))
+                {
+                    Console.WriteLine("You don't have this item");
+                }
+                else if (item is HealthPotion hp)
+                {
+                    game.Player.Inventory.Remove(item.Id);
+                    game.Player.Health = Math.Min(game.Player.MaxHealth, game.Player.Health + hp.Health);
+                    Console.WriteLine($"You have {game.Player.Health} health");
+                }
+            };
+
+            return command;
         }
     }
 }
