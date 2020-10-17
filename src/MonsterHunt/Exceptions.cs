@@ -41,4 +41,19 @@ namespace MonsterHunt
     {
         public MerchantNotInTownException() : base("Merchant not in town") { }
     }
+
+    internal class InvalidItemException : Exception
+    {
+        public InvalidItemException() : base("Invalid item") { }
+    }
+
+    internal class ItemNotAWeaponException : Exception
+    {
+        public ItemNotAWeaponException() : base("Item not a weapon") { }
+    }
+
+    internal class DoNotOwnItemException : Exception
+    {
+        public DoNotOwnItemException() : base("Do not own item") { }
+    }
 }

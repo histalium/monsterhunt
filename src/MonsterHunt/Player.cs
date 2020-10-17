@@ -18,5 +18,7 @@ namespace MonsterHunt
         internal List<Guid> Inventory { get; set; }
 
         internal int Coins { get; set; }
+
+        public Guid? WeaponId { get; internal set; }
     }
 }

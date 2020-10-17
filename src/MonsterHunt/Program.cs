@@ -19,8 +19,9 @@ namespace MonsterHunt
             var item2 = CreateItem("Item 2");
             var item3 = CreateItem("Item 3");
             var item4 = CreateHealthPotion("Health potion 1", 5);
+            var item5 = CreateWeapon("Weapon 1", 1);
 
-            items = new List<Item> { item1, item2, item3, item4 };
+            items = new List<Item> { item1, item2, item3, item4, item5 };
 
             var monster1 = new Monster
             {
@@ -100,6 +101,11 @@ namespace MonsterHunt
                     {
                         ItemId = item4.Id,
                         Price = 5
+                    },
+                    new ItemPrice
+                    {
+                        ItemId = item5.Id,
+                        Price = 7
                     }
                 }
             };
@@ -120,6 +126,7 @@ namespace MonsterHunt
             commands.Add("sell ", GetSellCommand(game));
             commands.Add("buy ", GetBuyCommand(game));
             commands.Add("use ", GetUseCommand(game));
+            commands.Add("equip ", GetEquipCommand(game));
 
             foreach (var command in ReadLines())
             {
@@ -175,6 +182,18 @@ namespace MonsterHunt
                 Id = Guid.NewGuid(),
                 Name = name,
                 Health = health
+            };
+
+            return item;
+        }
+
+        private static Item CreateWeapon(string name, int attack)
+        {
+            var item = new Weapon
+            {
+                Id = Guid.NewGuid(),
+                Name = name,
+                Attack = attack
             };
 
             return item;
@@ -438,6 +457,31 @@ namespace MonsterHunt
                     game.Player.Inventory.Remove(item.Id);
                     game.Player.Health = Math.Min(game.Player.MaxHealth, game.Player.Health + hp.Health);
                     Console.WriteLine($"You have {game.Player.Health} health");
+                }
+            };
+
+            return command;
+        }
+
+        private static Action<string> GetEquipCommand(MonsterHuntGame game)
+        {
+            Action<string> command = (weapon) =>
+            {
+                try
+                {
+                    game.Equip(weapon);
+                }
+                catch (InvalidItemException)
+                {
+                    Console.WriteLine("Invalid item");
+                }
+                catch (ItemNotAWeaponException)
+                {
+                    Console.WriteLine("Item is not a weapon");
+                }
+                catch (DoNotOwnItemException)
+                {
+                    Console.WriteLine("You don't have this item");
                 }
             };
 

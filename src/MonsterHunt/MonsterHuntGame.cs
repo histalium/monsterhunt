@@ -62,7 +62,7 @@ namespace MonsterHunt
                 Health = 30,
                 MaxHealth = 30,
                 Inventory = new List<Guid>(),
-                Coins = 10
+                Coins = 50
             };
 
             return player;
@@ -164,7 +164,8 @@ namespace MonsterHunt
             }
 
             var attackRollPlayer = dice.Roll();
-            var attackPlayer = Player.Attack + attackRollPlayer - CurrentMonster.Defense;
+            var weaponAttack = Player.WeaponId.HasValue ? ((Weapon)GetItem(Player.WeaponId.Value)).Attack : 0;
+            var attackPlayer = Player.Attack + attackRollPlayer + weaponAttack - CurrentMonster.Defense;
             attackPlayer = Math.Max(0, attackPlayer);
             if (attackPlayer > CurrentMonster.Health)
             {
@@ -255,6 +256,68 @@ namespace MonsterHunt
 
             var loot = items.Where(t => t.Id == lootId).Single();
             return new List<Item> { loot };
+        }
+
+        internal void Equip(string weaponName)
+        {
+            if (encounters != null)
+            {
+                throw new InBattleModeException();
+            }
+
+            var item = FindItem(weaponName);
+
+            if (item == null)
+            {
+                throw new InvalidItemException();
+            }
+
+            var weapon = item as Weapon;
+
+            if (weapon == null)
+            {
+                throw new ItemNotAWeaponException();
+            }
+
+            if (!HasItem(weapon))
+            {
+                throw new DoNotOwnItemException();
+            }
+
+            if (Player.WeaponId.HasValue)
+            {
+                Player.Inventory.Add(Player.WeaponId.Value);
+            }
+
+            Player.Inventory.Remove(weapon.Id);
+            Player.WeaponId = weapon.Id;
+        }
+
+        private Item FindItem(string name)
+        {
+            var item = items
+                .Where(t => AreEqual(name, t.Name))
+                .FirstOrDefault();
+
+            return item;
+        }
+
+        private bool HasItem(Item item)
+        {
+            var hasItem = Player.Inventory
+                .Where(t => t == item.Id)
+                .Any();
+
+            return hasItem;
+        }
+
+        private Item GetItem(Guid itemId)
+        {
+            var item = items
+                .Where(t => t.Id == itemId)
+                .Single();
+
+            return item;
         }
     }
 }
