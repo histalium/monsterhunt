@@ -18,6 +18,8 @@ namespace MonsterHunt
 
         public event EventHandler<MonsterDefeatedEventArgs> MonsterDefeated;
 
+        public event EventHandler<MonsterEncounteredEventArgs> MonsterEncountered;
+
         public MonsterHuntGame(List<Town> towns, List<Route> routes, List<Monster> monsters, List<Item> items,
             List<Merchant> merchants)
         {
@@ -99,9 +101,9 @@ namespace MonsterHunt
             CurrentMonster = encounters.Next();
             CurrentMerchant = null;
 
-            if (CurrentMonster == null)
+            if (CurrentMonster != null)
             {
-                encounters = null;
+                MonsterEncountered?.Invoke(this, new MonsterEncounteredEventArgs(CurrentMonster));
             }
         }
 
@@ -190,6 +192,10 @@ namespace MonsterHunt
                 if (CurrentMonster == null)
                 {
                     encounters = null;
+                }
+                else
+                {
+                    MonsterEncountered?.Invoke(this, new MonsterEncounteredEventArgs(CurrentMonster));
                 }
 
                 return;

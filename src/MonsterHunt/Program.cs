@@ -153,6 +153,7 @@ namespace MonsterHunt
 
             var game = new MonsterHuntGame(towns, routes, monsters, items, merchants);
             game.MonsterDefeated += MonsterDefeated;
+            game.MonsterEncountered += MonsterEncountered;
 
             Console.WriteLine($"Welcome in {game.CurrentTown.Name}");
 
@@ -269,13 +270,6 @@ namespace MonsterHunt
                 try
                 {
                     game.GoToTown(destination);
-
-                    if (game.CurrentMonster != null)
-                    {
-                        //todo event
-                        Console.WriteLine($"You encounter a {game.CurrentMonster.Name}");
-                    }
-
                     return;
                 }
                 catch (InvalidTownException)
@@ -344,12 +338,7 @@ namespace MonsterHunt
                     {
                         //todo event
 
-                        if (game.CurrentMonster != null)
-                        {
-                            //todo event
-                            Console.WriteLine($"You encounter a {game.CurrentMonster.Name}");
-                        }
-                        else
+                        if (game.CurrentMonster == null)
                         {
                             Console.WriteLine($"Welcome in {game.CurrentTown.Name}");
                         }
@@ -371,6 +360,11 @@ namespace MonsterHunt
             {
                 Console.WriteLine($"Loot: {string.Join(", ", e.Loot.Select(t => t.Name))}");
             }
+        }
+
+        private static void MonsterEncountered(object sender, MonsterEncounteredEventArgs e)
+        {
+            Console.WriteLine($"You encounter a {e.Monster.Name}");
         }
 
         private static Action<string> GetInventoryCommand(MonsterHuntGame game)

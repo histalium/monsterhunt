@@ -15,4 +15,14 @@ namespace MonsterHunt
 
         internal IReadOnlyList<Item> Loot { get; }
     }
+
+    public class MonsterEncounteredEventArgs : EventArgs
+    {
+        internal MonsterEncounteredEventArgs(Monster monster)
+        {
+            Monster = monster;
+        }
+
+        internal Monster Monster { get; }
+    }
 }
