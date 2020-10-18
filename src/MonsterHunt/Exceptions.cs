@@ -61,4 +61,9 @@ namespace MonsterHunt
     {
         public ItemNotBodyArmorException() : base("Item not body armor") { }
     }
+
+    internal class ItemNotLegArmorException : Exception
+    {
+        public ItemNotLegArmorException() : base("Item not leg armor") { }
+    }
 }

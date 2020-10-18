@@ -196,7 +196,8 @@ namespace MonsterHunt
             }
 
             var attackRollMonster = dice.Roll();
-            var attackMonster = CurrentMonster.Attack + attackRollMonster - Player.Defense;
+            var legDefencePlayer = Player.LegArmorId.HasValue ? ((LegArmor)GetItem(Player.LegArmorId.Value)).Defence : 0;
+            var attackMonster = CurrentMonster.Attack + attackRollMonster - Player.Defense - legDefencePlayer;
             attackMonster = Math.Max(0, attackMonster);
             if (attackMonster > Player.Health)
             {
@@ -326,6 +327,41 @@ namespace MonsterHunt
 
             Player.Inventory.Remove(armor.Id);
             Player.BodyArmorId = armor.Id;
+        }
+
+        internal void EquipLegArmor(string legArmorName)
+        {
+            if (encounters != null)
+            {
+                throw new InBattleModeException();
+            }
+
+            var item = FindItem(legArmorName);
+
+            if (item == null)
+            {
+                throw new InvalidItemException();
+            }
+
+            var armor = item as LegArmor;
+
+            if (armor == null)
+            {
+                throw new ItemNotLegArmorException();
+            }
+
+            if (!HasItem(armor))
+            {
+                throw new DoNotOwnItemException();
+            }
+
+            if (Player.LegArmorId.HasValue)
+            {
+                Player.Inventory.Add(Player.LegArmorId.Value);
+            }
+
+            Player.Inventory.Remove(armor.Id);
+            Player.LegArmorId = armor.Id;
         }
 
         private Item FindItem(string name)

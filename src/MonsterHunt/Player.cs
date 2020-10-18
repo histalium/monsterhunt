@@ -22,5 +22,7 @@ namespace MonsterHunt
         public Guid? WeaponId { get; internal set; }
 
         public Guid? BodyArmorId { get; set; }
+
+        public Guid? LegArmorId { get; set; }
     }
 }
