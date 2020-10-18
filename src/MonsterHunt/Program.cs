@@ -33,8 +33,8 @@ namespace MonsterHunt
                 Defense = 1,
                 Health = 15,
                 Loot = new RollResult()
-                    .Set(1, item1.Id)
-                    .Set(2, item2.Id)
+                    .Set(1, 2, item1.Id)
+                    .Set(3, item2.Id)
             };
 
             var monster2 = new Monster
@@ -45,8 +45,8 @@ namespace MonsterHunt
                 Defense = 1,
                 Health = 12,
                 Loot = new RollResult()
-                    .Set(1, item1.Id)
-                    .Set(2, item3.Id)
+                    .Set(1, 2, item1.Id)
+                    .Set(3, item3.Id)
             };
 
             monsters = new List<Monster> { monster1, monster2 };
@@ -93,7 +93,7 @@ namespace MonsterHunt
                     },
                     new ItemPrice
                     {
-                        ItemId = item3.Id,
+                        ItemId = item2.Id,
                         Price = 2
                     }
                 },
@@ -122,7 +122,34 @@ namespace MonsterHunt
                 }
             };
 
-            merchants = new List<Merchant> { merchant1 };
+            var merchant2 = new Merchant
+            {
+                Name = "Merchant 2",
+                TownId = town2.Id,
+                Requests = new List<ItemPrice>
+                {
+                    new ItemPrice
+                    {
+                        ItemId = item1.Id,
+                        Price = 1
+                    },
+                    new ItemPrice
+                    {
+                        ItemId = item3.Id,
+                        Price = 3
+                    }
+                },
+                Offers = new List<ItemPrice>
+                {
+                    new ItemPrice
+                    {
+                        ItemId = item4.Id,
+                        Price = 5
+                    }
+                }
+            };
+
+            merchants = new List<Merchant> { merchant1, merchant2 };
 
             var game = new MonsterHuntGame(towns, routes, monsters, items, merchants);
             game.MonsterDefeated += MonsterDefeated;
