@@ -197,7 +197,8 @@ namespace MonsterHunt
 
             var attackRollMonster = dice.Roll();
             var legDefencePlayer = Player.LegArmorId.HasValue ? ((LegArmor)GetItem(Player.LegArmorId.Value)).Defence : 0;
-            var attackMonster = CurrentMonster.Attack + attackRollMonster - Player.Defense - legDefencePlayer;
+            var bodyDefencePlayer = Player.BodyArmorId.HasValue ? ((BodyArmor)GetItem(Player.BodyArmorId.Value)).Defence : 0;
+            var attackMonster = CurrentMonster.Attack + attackRollMonster - Player.Defense - legDefencePlayer - bodyDefencePlayer;
             attackMonster = Math.Max(0, attackMonster);
             if (attackMonster > Player.Health)
             {
