@@ -258,7 +258,7 @@ namespace MonsterHunt
             return new List<Item> { loot };
         }
 
-        internal void Equip(string weaponName)
+        internal void EquipWeapon(string weaponName)
         {
             if (encounters != null)
             {
@@ -291,6 +291,41 @@ namespace MonsterHunt
 
             Player.Inventory.Remove(weapon.Id);
             Player.WeaponId = weapon.Id;
+        }
+
+        internal void EquipBodyArmor(string bodyArmorName)
+        {
+            if (encounters != null)
+            {
+                throw new InBattleModeException();
+            }
+
+            var item = FindItem(bodyArmorName);
+
+            if (item == null)
+            {
+                throw new InvalidItemException();
+            }
+
+            var armor = item as BodyArmor;
+
+            if (armor == null)
+            {
+                throw new ItemNotBodyArmorException();
+            }
+
+            if (!HasItem(armor))
+            {
+                throw new DoNotOwnItemException();
+            }
+
+            if (Player.BodyArmorId.HasValue)
+            {
+                Player.Inventory.Add(Player.BodyArmorId.Value);
+            }
+
+            Player.Inventory.Remove(armor.Id);
+            Player.BodyArmorId = armor.Id;
         }
 
         private Item FindItem(string name)

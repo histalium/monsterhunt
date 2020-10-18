@@ -56,4 +56,9 @@ namespace MonsterHunt
     {
         public DoNotOwnItemException() : base("Do not own item") { }
     }
+
+    internal class ItemNotBodyArmorException : Exception
+    {
+        public ItemNotBodyArmorException() : base("Item not body armor") { }
+    }
 }

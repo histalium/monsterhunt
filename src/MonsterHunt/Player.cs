@@ -20,5 +20,7 @@ namespace MonsterHunt
         internal int Coins { get; set; }
 
         public Guid? WeaponId { get; internal set; }
+
+        public Guid? BodyArmorId { get; set; }
     }
 }

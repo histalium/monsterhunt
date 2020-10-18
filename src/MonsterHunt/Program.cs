@@ -20,8 +20,9 @@ namespace MonsterHunt
             var item3 = CreateItem("Item 3");
             var item4 = CreateHealthPotion("Health potion 1", 5);
             var item5 = CreateWeapon("Weapon 1", 1);
+            var item6 = CreateBodyArmor("Body armor 1", 1);
 
-            items = new List<Item> { item1, item2, item3, item4, item5 };
+            items = new List<Item> { item1, item2, item3, item4, item5, item6 };
 
             var monster1 = new Monster
             {
@@ -105,6 +106,11 @@ namespace MonsterHunt
                     new ItemPrice
                     {
                         ItemId = item5.Id,
+                        Price = 7
+                    },
+                    new ItemPrice
+                    {
+                        ItemId = item6.Id,
                         Price = 7
                     }
                 }
@@ -194,6 +200,18 @@ namespace MonsterHunt
                 Id = Guid.NewGuid(),
                 Name = name,
                 Attack = attack
+            };
+
+            return item;
+        }
+
+        private static Item CreateBodyArmor(string name, int defence)
+        {
+            var item = new BodyArmor
+            {
+                Id = Guid.NewGuid(),
+                Name = name,
+                Defence = defence
             };
 
             return item;
@@ -465,24 +483,49 @@ namespace MonsterHunt
 
         private static Action<string> GetEquipCommand(MonsterHuntGame game)
         {
-            Action<string> command = (weapon) =>
+            Action<string> command = (item) =>
             {
                 try
                 {
-                    game.Equip(weapon);
+                    game.EquipWeapon(item);
+                    return;
                 }
                 catch (InvalidItemException)
                 {
                     Console.WriteLine("Invalid item");
+                    return;
                 }
                 catch (ItemNotAWeaponException)
                 {
-                    Console.WriteLine("Item is not a weapon");
+                    // do nothing. try other command.
                 }
                 catch (DoNotOwnItemException)
                 {
                     Console.WriteLine("You don't have this item");
+                    return;
                 }
+
+                try
+                {
+                    game.EquipBodyArmor(item);
+                    return;
+                }
+                catch (InvalidItemException)
+                {
+                    Console.WriteLine("Invalid item");
+                    return;
+                }
+                catch (ItemNotBodyArmorException)
+                {
+                    // do nothing. try other command.
+                }
+                catch (DoNotOwnItemException)
+                {
+                    Console.WriteLine("You don't have this item");
+                    return;
+                }
+
+                Console.WriteLine("Can't equip item");
             };
 
             return command;
