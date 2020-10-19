@@ -66,4 +66,9 @@ namespace MonsterHunt
     {
         public ItemNotLegArmorException() : base("Item not leg armor") { }
     }
+
+    internal class DefeatedException : Exception
+    {
+        public DefeatedException() : base("You are defeated") { }
+    }
 }

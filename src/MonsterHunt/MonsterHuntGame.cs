@@ -72,6 +72,11 @@ namespace MonsterHunt
 
         public void GoToTown(string townName)
         {
+            if (Player.Health <= 0)
+            {
+                throw new DefeatedException();
+            }
+
             if (encounters != null)
             {
                 throw new InBattleModeException();
@@ -160,6 +165,11 @@ namespace MonsterHunt
 
         internal void Attack()
         {
+            if (Player.Health <= 0)
+            {
+                throw new DefeatedException();
+            }
+
             if (CurrentMonster == null)
             {
                 throw new NotInBattleModeException();
@@ -218,6 +228,11 @@ namespace MonsterHunt
 
         internal void GoToMerchant(string merchantName)
         {
+            if (Player.Health <= 0)
+            {
+                throw new DefeatedException();
+            }
+
             if (encounters != null)
             {
                 throw new InBattleModeException();
@@ -268,6 +283,11 @@ namespace MonsterHunt
 
         internal void EquipWeapon(string weaponName)
         {
+            if (Player.Health <= 0)
+            {
+                throw new DefeatedException();
+            }
+
             if (encounters != null)
             {
                 throw new InBattleModeException();
@@ -303,6 +323,11 @@ namespace MonsterHunt
 
         internal void EquipBodyArmor(string bodyArmorName)
         {
+            if (Player.Health <= 0)
+            {
+                throw new DefeatedException();
+            }
+
             if (encounters != null)
             {
                 throw new InBattleModeException();
@@ -338,6 +363,11 @@ namespace MonsterHunt
 
         internal void EquipLegArmor(string legArmorName)
         {
+            if (Player.Health <= 0)
+            {
+                throw new DefeatedException();
+            }
+
             if (encounters != null)
             {
                 throw new InBattleModeException();

@@ -193,6 +193,10 @@ namespace MonsterHunt
                 {
                     Console.WriteLine("You can't do this in battle");
                 }
+                catch (DefeatedException)
+                {
+                    Console.WriteLine("You are defeated");
+                }
             }
         }
 
