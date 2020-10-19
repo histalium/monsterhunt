@@ -6,7 +6,7 @@ namespace MonsterHunt
 {
     internal class MonsterHuntGame
     {
-        private readonly List<Town> towns;
+        private readonly TownRepository towns;
         private readonly List<Route> routes;
         private readonly List<Monster> monsters;
         private readonly List<Item> items;
@@ -20,7 +20,7 @@ namespace MonsterHunt
 
         public event EventHandler<MonsterEncounteredEventArgs> MonsterEncountered;
 
-        public MonsterHuntGame(List<Town> towns, List<Route> routes, List<Monster> monsters, List<Item> items,
+        public MonsterHuntGame(TownRepository towns, List<Route> routes, List<Monster> monsters, List<Item> items,
             List<Merchant> merchants)
         {
             this.towns = towns;
@@ -28,7 +28,7 @@ namespace MonsterHunt
             this.monsters = monsters;
             this.items = items;
             this.merchants = merchants;
-            CurrentTown = FindTown("town 1");
+            CurrentTown = towns.Find("town 1");
             Player = CreatePlayer();
         }
 
@@ -39,15 +39,6 @@ namespace MonsterHunt
         public Merchant CurrentMerchant { get; private set; }
 
         public Player Player { get; }
-
-        private Town FindTown(string name)
-        {
-            var town = towns
-                .Where(t => AreEqual(t.Name, name))
-                .SingleOrDefault();
-
-            return town;
-        }
 
         private static bool AreEqual(string value1, string value2)
         {
@@ -82,7 +73,7 @@ namespace MonsterHunt
                 throw new InBattleModeException();
             }
 
-            var town = FindTown(townName);
+            var town = towns.Find(townName);
 
             if (town == null)
             {

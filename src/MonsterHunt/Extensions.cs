@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 
 namespace MonsterHunt
@@ -14,6 +15,11 @@ namespace MonsterHunt
             }
 
             return enumerator.Current;
+        }
+
+        internal static bool AreEqualIgnoreCase(this string value1, string value2)
+        {
+            return value1.Equals(value2, StringComparison.InvariantCultureIgnoreCase);
         }
     }
 }

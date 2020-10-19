@@ -9,7 +9,6 @@ namespace MonsterHunt
     {
         private static List<Item> items;
         private static List<Monster> monsters;
-        private static List<Town> towns;
         private static List<Route> routes;
         private static List<Merchant> merchants;
 
@@ -63,7 +62,9 @@ namespace MonsterHunt
                 Name = "Town 2"
             };
 
-            towns = new List<Town> { town1, town2 };
+            var towns = new TownRepository();
+            towns.Add(town1);
+            towns.Add(town2);
 
             var route1 = new Route
             {
