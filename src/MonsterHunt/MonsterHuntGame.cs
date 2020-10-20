@@ -476,5 +476,32 @@ namespace MonsterHunt
                 Player.Coins -= price;
             }
         }
+
+        internal void SellItem(string itemName)
+        {
+            var item = FindItem(itemName);
+            if (item == null)
+            {
+                throw new InvalidItemException();
+            }
+            else if (CurrentMerchant == null)
+            {
+                throw new NotAtAMerchantException();
+            }
+            else if (!Player.Inventory.Contains(item.Id))
+            {
+                throw new DoNotOwnItemException();
+            }
+            else if (!CurrentMerchant.Requests.Where(t => t.ItemId == item.Id).Any())
+            {
+                throw new MerchantDoesNotRequestException();
+            }
+            else
+            {
+                var value = CurrentMerchant.Requests.Where(t => t.ItemId == item.Id).Single().Price;
+                Player.Inventory.Remove(item.Id);
+                Player.Coins += value;
+            }
+        }
     }
 }

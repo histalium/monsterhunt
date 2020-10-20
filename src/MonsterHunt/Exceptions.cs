@@ -91,4 +91,9 @@ namespace MonsterHunt
     {
         public NotEnoughCoinsException() : base("Not enaugh coins") { }
     }
+
+    internal class MerchantDoesNotRequestException : Exception
+    {
+        public MerchantDoesNotRequestException() : base("Merchant does not request item") { }
+    }
 }

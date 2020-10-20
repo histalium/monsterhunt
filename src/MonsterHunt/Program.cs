@@ -445,29 +445,30 @@ namespace MonsterHunt
         {
             Action<string> command = (itemName) =>
             {
-                var item = items.Where(t => t.Name.Equals(itemName, StringComparison.InvariantCultureIgnoreCase)).SingleOrDefault();
-                if (item == null)
+                try
+                {
+                    game.SellItem(itemName);
+                    Console.WriteLine($"Item sold. You have now {game.Player.Coins}c");
+                }
+                catch (InvalidItemException)
                 {
                     Console.WriteLine("Invalid item");
                 }
-                else if (game.CurrentMerchant == null)
+                catch (NotAtAMerchantException)
                 {
                     Console.WriteLine("Not at a merchant");
                 }
-                else if (!game.Player.Inventory.Contains(item.Id))
-                {
-                    Console.WriteLine("You does not have item");
-                }
-                else if (!game.CurrentMerchant.Requests.Where(t => t.ItemId == item.Id).Any())
+                catch (MerchantDoesNotRequestException)
                 {
                     Console.WriteLine("Merchant does not request item");
                 }
-                else
+                catch (NotEnoughCoinsException)
                 {
-                    var value = game.CurrentMerchant.Requests.Where(t => t.ItemId == item.Id).Single().Price;
-                    game.Player.Inventory.Remove(item.Id);
-                    game.Player.Coins += value;
-                    Console.WriteLine($"Item sold. You have now {game.Player.Coins}c");
+                    Console.WriteLine("You don't have enough coins");
+                }
+                catch (DoNotOwnItemException)
+                {
+                    Console.WriteLine("You do not have this item");
                 }
             };
 
