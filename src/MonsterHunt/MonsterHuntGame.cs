@@ -22,6 +22,8 @@ namespace MonsterHunt
 
         public event EventHandler<PlayerHealthChangedEventArgs> PlayerHealthChanged;
 
+        public event EventHandler PlayerDefeated;
+
         public MonsterHuntGame(TownRepository towns, List<Route> routes, List<Monster> monsters, List<Item> items,
             List<Merchant> merchants)
         {
@@ -216,6 +218,15 @@ namespace MonsterHunt
             else
             {
                 Player.Health -= attackMonster;
+            }
+
+            if (Player.Health <= 0)
+            {
+                PlayerDefeated.Invoke(this, EventArgs.Empty);
+            }
+            else if (attackMonster != 0)
+            {
+                PlayerHealthChanged?.Invoke(this, new PlayerHealthChangedEventArgs(Player.Health));
             }
         }
 
