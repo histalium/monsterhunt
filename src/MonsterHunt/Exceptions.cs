@@ -76,4 +76,19 @@ namespace MonsterHunt
     {
         public CanNotUseItemException() : base("Can not use item") { }
     }
+
+    internal class NotAtAMerchantException : Exception
+    {
+        public NotAtAMerchantException() : base("Not at a merchant") { }
+    }
+
+    internal class MerchantDoesNotOfferException : Exception
+    {
+        public MerchantDoesNotOfferException() : base("Merchant does not offer item") { }
+    }
+
+    internal class NotEnoughCoinsException : Exception
+    {
+        public NotEnoughCoinsException() : base("Not enaugh coins") { }
+    }
 }
