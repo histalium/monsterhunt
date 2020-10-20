@@ -71,4 +71,9 @@ namespace MonsterHunt
     {
         public DefeatedException() : base("You are defeated") { }
     }
+
+    internal class CanNotUseItemException : Exception
+    {
+        public CanNotUseItemException() : base("Can not use item") { }
+    }
 }

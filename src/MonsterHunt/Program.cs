@@ -155,6 +155,7 @@ namespace MonsterHunt
             var game = new MonsterHuntGame(towns, routes, monsters, items, merchants);
             game.MonsterDefeated += MonsterDefeated;
             game.MonsterEncountered += MonsterEncountered;
+            game.PlayerHealthChanged += PlayerHealthChanged;
 
             Console.WriteLine($"Welcome in {game.CurrentTown.Name}");
 
@@ -372,6 +373,11 @@ namespace MonsterHunt
             Console.WriteLine($"You encounter a {e.Monster.Name}");
         }
 
+        private static void PlayerHealthChanged(object sender, PlayerHealthChangedEventArgs e)
+        {
+            Console.WriteLine($"Your health is {e.Health}");
+        }
+
         private static Action<string> GetInventoryCommand(MonsterHuntGame game)
         {
             Action<string> command = (v) =>
@@ -505,20 +511,21 @@ namespace MonsterHunt
         {
             Action<string> command = (itemName) =>
             {
-                var item = items.Where(t => t.Name.Equals(itemName, StringComparison.InvariantCultureIgnoreCase)).SingleOrDefault();
-                if (item == null)
+                try
+                {
+                    game.UseItem(itemName);
+                }
+                catch (InvalidItemException)
                 {
                     Console.WriteLine("Invalid item");
                 }
-                else if (!game.Player.Inventory.Contains(item.Id))
+                catch (DoNotOwnItemException)
                 {
-                    Console.WriteLine("You don't have this item");
+                    Console.WriteLine("You do not have this item");
                 }
-                else if (item is HealthPotion hp)
+                catch (CanNotUseItemException)
                 {
-                    game.Player.Inventory.Remove(item.Id);
-                    game.Player.Health = Math.Min(game.Player.MaxHealth, game.Player.Health + hp.Health);
-                    Console.WriteLine($"You have {game.Player.Health} health");
+                    Console.WriteLine("Iten can't be used");
                 }
             };
 

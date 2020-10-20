@@ -25,4 +25,14 @@ namespace MonsterHunt
 
         internal Monster Monster { get; }
     }
+
+    public class PlayerHealthChangedEventArgs : EventArgs
+    {
+        internal PlayerHealthChangedEventArgs(int health)
+        {
+            Health = health;
+        }
+
+        internal int Health { get; }
+    }
 }

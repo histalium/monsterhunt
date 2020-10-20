@@ -20,6 +20,8 @@ namespace MonsterHunt
 
         public event EventHandler<MonsterEncounteredEventArgs> MonsterEncountered;
 
+        public event EventHandler<PlayerHealthChangedEventArgs> PlayerHealthChanged;
+
         public MonsterHuntGame(TownRepository towns, List<Route> routes, List<Monster> monsters, List<Item> items,
             List<Merchant> merchants)
         {
@@ -417,6 +419,35 @@ namespace MonsterHunt
                 .Single();
 
             return item;
+        }
+
+        internal void UseItem(string itemName)
+        {
+            if (Player.Health <= 0)
+            {
+                throw new DefeatedException();
+            }
+
+            var item = FindItem(itemName);
+
+            if (item == null)
+            {
+                throw new InvalidItemException();
+            }
+            else if (!Player.Inventory.Contains(item.Id))
+            {
+                throw new DoNotOwnItemException();
+            }
+            else if (item is HealthPotion hp)
+            {
+                Player.Inventory.Remove(item.Id);
+                Player.Health = Math.Min(Player.MaxHealth, Player.Health + hp.Health);
+                PlayerHealthChanged?.Invoke(this, new PlayerHealthChangedEventArgs(Player.Health));
+            }
+            else
+            {
+                throw new CanNotUseItemException();
+            }
         }
     }
 }
