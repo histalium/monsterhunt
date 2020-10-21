@@ -10,7 +10,7 @@ namespace MonsterHunt
         private readonly RouteRepository routes;
         private readonly MonsterRepository monsters;
         private readonly ItemRepository items;
-        private readonly List<Merchant> merchants;
+        private readonly MerchantRepository merchants;
 
         private readonly Dice dice = new Dice();
 
@@ -29,7 +29,7 @@ namespace MonsterHunt
         public event EventHandler<ArrivedAtLocationEventArgs> ArrivedAtLocation;
 
         public MonsterHuntGame(TownRepository towns, RouteRepository routes, MonsterRepository monsters, ItemRepository items,
-            List<Merchant> merchants)
+            MerchantRepository merchants)
         {
             this.towns = towns;
             this.routes = routes;
@@ -233,7 +233,7 @@ namespace MonsterHunt
                 throw new InBattleModeException();
             }
 
-            var merchant = FindMerchant(merchantName);
+            var merchant = merchants.Find(merchantName);
 
             if (merchant == null)
             {
@@ -251,15 +251,6 @@ namespace MonsterHunt
             }
 
             CurrentMerchant = merchant;
-        }
-
-        private Merchant FindMerchant(string name)
-        {
-            var merchant = merchants
-                .Where(t => AreEqual(t.Name, name))
-                .SingleOrDefault();
-
-            return merchant;
         }
 
         private List<Item> GetLoot()

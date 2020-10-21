@@ -7,8 +7,6 @@ namespace MonsterHunt
 {
     class Program
     {
-        private static List<Merchant> merchants;
-
         static void Main(string[] args)
         {
             var item1 = CreateItem("Item 1");
@@ -157,7 +155,9 @@ namespace MonsterHunt
                 }
             };
 
-            merchants = new List<Merchant> { merchant1, merchant2 };
+            var merchants = new MerchantRepository();
+            merchants.Add(merchant1);
+            merchants.Add(merchant2);
 
             var game = new MonsterHuntGame(towns, routes, monsters, items, merchants);
             game.MonsterDefeated += MonsterDefeated;
