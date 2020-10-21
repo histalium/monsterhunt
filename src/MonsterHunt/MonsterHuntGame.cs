@@ -414,6 +414,20 @@ namespace MonsterHunt
             Player.LegArmorId = armor.Id;
         }
 
+        internal IReadOnlyCollection<Item> GetInventory()
+        {
+            if (Player.Health <= 0)
+            {
+                throw new DefeatedException();
+            }
+
+            var inventory = Player.Inventory
+                .Select(t => GetItem(t))
+                .ToList();
+
+            return inventory.AsReadOnly();
+        }
+
         private Item FindItem(string name)
         {
             var item = items

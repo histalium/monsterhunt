@@ -376,9 +376,9 @@ namespace MonsterHunt
         {
             Action<string> command = (v) =>
             {
-                foreach (var itemId in game.Player.Inventory)
+                var inventory = game.GetInventory();
+                foreach (var item in inventory)
                 {
-                    var item = FindItem(itemId);
                     Console.WriteLine(item.Name);
                 }
             };
