@@ -7,7 +7,7 @@ namespace MonsterHunt
     internal class MonsterHuntGame
     {
         private readonly TownRepository towns;
-        private readonly List<Route> routes;
+        private readonly RouteRepository routes;
         private readonly MonsterRepository monsters;
         private readonly ItemRepository items;
         private readonly List<Merchant> merchants;
@@ -28,7 +28,7 @@ namespace MonsterHunt
 
         public event EventHandler<ArrivedAtLocationEventArgs> ArrivedAtLocation;
 
-        public MonsterHuntGame(TownRepository towns, List<Route> routes, MonsterRepository monsters, ItemRepository items,
+        public MonsterHuntGame(TownRepository towns, RouteRepository routes, MonsterRepository monsters, ItemRepository items,
             List<Merchant> merchants)
         {
             this.towns = towns;
@@ -93,7 +93,7 @@ namespace MonsterHunt
                 throw new SameTownException();
             }
 
-            var route = FindRouteToTown(town);
+            var route = routes.FindBetweenTowns(CurrentTown.Id, town.Id);
 
             if (route == null)
             {
@@ -109,15 +109,6 @@ namespace MonsterHunt
             {
                 MonsterEncountered?.Invoke(this, new MonsterEncounteredEventArgs(CurrentMonster));
             }
-        }
-
-        private Route FindRouteToTown(Town town)
-        {
-            var route = routes
-                .Where(t => t.Towns.Contains(town.Id) && t.Towns.Contains(CurrentTown.Id))
-                .SingleOrDefault();
-
-            return route;
         }
 
         private IEnumerable<Monster> BuildEncounters(Route route)
