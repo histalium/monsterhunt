@@ -157,6 +157,7 @@ namespace MonsterHunt
             game.MonsterEncountered += MonsterEncountered;
             game.PlayerHealthChanged += PlayerHealthChanged;
             game.PlayerDefeated += PlayerDefeated;
+            game.MonsterHealthChanged += MonsterHealthChanged;
 
             Console.WriteLine($"Welcome in {game.CurrentTown.Name}");
 
@@ -327,11 +328,7 @@ namespace MonsterHunt
                 {
                     var monster = game.CurrentMonster;
                     game.Attack();
-                    if (game.CurrentMonster == monster)
-                    {
-                        Console.WriteLine($"{game.CurrentMonster.Name}'s health is {game.CurrentMonster.Health}");
-                    }
-                    else
+                    if (game.CurrentMonster != monster)
                     {
                         //todo event
 
@@ -372,6 +369,11 @@ namespace MonsterHunt
         private static void PlayerDefeated(object sender, EventArgs e)
         {
             Console.WriteLine("You are defeated");
+        }
+
+        private static void MonsterHealthChanged(object sender, MonsterHealthChangedEventArgs e)
+        {
+            Console.WriteLine($"Monster's health is {e.Health}");
         }
 
         private static Action<string> GetInventoryCommand(MonsterHuntGame game)

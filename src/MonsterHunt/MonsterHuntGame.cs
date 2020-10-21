@@ -22,6 +22,8 @@ namespace MonsterHunt
 
         public event EventHandler<PlayerHealthChangedEventArgs> PlayerHealthChanged;
 
+        public event EventHandler<MonsterHealthChangedEventArgs> MonsterHealthChanged;
+
         public event EventHandler PlayerDefeated;
 
         public MonsterHuntGame(TownRepository towns, List<Route> routes, List<Monster> monsters, List<Item> items,
@@ -204,6 +206,10 @@ namespace MonsterHunt
                 }
 
                 return;
+            }
+            else
+            {
+                MonsterHealthChanged?.Invoke(this, new MonsterHealthChangedEventArgs(CurrentMonster.Health));
             }
 
             var attackRollMonster = dice.Roll();
