@@ -6,13 +6,8 @@ namespace MonsterHunt
 {
     internal class MonsterHuntGame
     {
-        private readonly TownRepository towns;
-        private readonly RouteRepository routes;
-        private readonly MonsterRepository monsters;
-        private readonly ItemRepository items;
-        private readonly MerchantRepository merchants;
-
         private readonly Dice dice = new Dice();
+        private readonly UnitOfWork unitOfWork;
 
         private IEnumerator<Monster> encounters;
 
@@ -28,15 +23,10 @@ namespace MonsterHunt
 
         public event EventHandler<ArrivedAtLocationEventArgs> ArrivedAtLocation;
 
-        public MonsterHuntGame(TownRepository towns, RouteRepository routes, MonsterRepository monsters, ItemRepository items,
-            MerchantRepository merchants)
+        public MonsterHuntGame(UnitOfWork unitOfWork)
         {
-            this.towns = towns;
-            this.routes = routes;
-            this.monsters = monsters;
-            this.items = items;
-            this.merchants = merchants;
-            CurrentTown = towns.Find("town 1");
+            this.unitOfWork = unitOfWork;
+            CurrentTown = unitOfWork.Towns.Find("town 1");
             Player = CreatePlayer();
         }
 
@@ -81,7 +71,7 @@ namespace MonsterHunt
                 throw new InBattleModeException();
             }
 
-            var town = towns.Find(townName);
+            var town = unitOfWork.Towns.Find(townName);
 
             if (town == null)
             {
@@ -93,7 +83,7 @@ namespace MonsterHunt
                 throw new SameTownException();
             }
 
-            var route = routes.FindBetweenTowns(CurrentTown.Id, town.Id);
+            var route = unitOfWork.Routes.FindBetweenTowns(CurrentTown.Id, town.Id);
 
             if (route == null)
             {
@@ -129,7 +119,7 @@ namespace MonsterHunt
 
         private Monster CreateMonsterInstance(Guid monsterId)
         {
-            var monster = monsters.Get(monsterId);
+            var monster = unitOfWork.Monsters.Get(monsterId);
 
             var copy = new Monster
             {
@@ -157,7 +147,7 @@ namespace MonsterHunt
             }
 
             var attackRollPlayer = dice.Roll();
-            var weaponAttack = Player.WeaponId.HasValue ? ((Weapon)items.Get(Player.WeaponId.Value)).Attack : 0;
+            var weaponAttack = Player.WeaponId.HasValue ? ((Weapon)unitOfWork.Items.Get(Player.WeaponId.Value)).Attack : 0;
             var attackPlayer = Player.Attack + attackRollPlayer + weaponAttack - CurrentMonster.Defense;
             attackPlayer = Math.Max(0, attackPlayer);
             if (attackPlayer > CurrentMonster.Health)
@@ -198,8 +188,8 @@ namespace MonsterHunt
             }
 
             var attackRollMonster = dice.Roll();
-            var legDefencePlayer = Player.LegArmorId.HasValue ? ((LegArmor)items.Get(Player.LegArmorId.Value)).Defence : 0;
-            var bodyDefencePlayer = Player.BodyArmorId.HasValue ? ((BodyArmor)items.Get(Player.BodyArmorId.Value)).Defence : 0;
+            var legDefencePlayer = Player.LegArmorId.HasValue ? ((LegArmor)unitOfWork.Items.Get(Player.LegArmorId.Value)).Defence : 0;
+            var bodyDefencePlayer = Player.BodyArmorId.HasValue ? ((BodyArmor)unitOfWork.Items.Get(Player.BodyArmorId.Value)).Defence : 0;
             var attackMonster = CurrentMonster.Attack + attackRollMonster - Player.Defense - legDefencePlayer - bodyDefencePlayer;
             attackMonster = Math.Max(0, attackMonster);
             if (attackMonster > Player.Health)
@@ -233,7 +223,7 @@ namespace MonsterHunt
                 throw new InBattleModeException();
             }
 
-            var merchant = merchants.Find(merchantName);
+            var merchant = unitOfWork.Merchants.Find(merchantName);
 
             if (merchant == null)
             {
@@ -263,7 +253,7 @@ namespace MonsterHunt
                 return new List<Item>();
             }
 
-            var loot = items.Get(lootId.Value);
+            var loot = unitOfWork.Items.Get(lootId.Value);
             return new List<Item> { loot };
         }
 
@@ -279,7 +269,7 @@ namespace MonsterHunt
                 throw new InBattleModeException();
             }
 
-            var item = items.Find(weaponName);
+            var item = unitOfWork.Items.Find(weaponName);
 
             if (item == null)
             {
@@ -319,7 +309,7 @@ namespace MonsterHunt
                 throw new InBattleModeException();
             }
 
-            var item = items.Find(bodyArmorName);
+            var item = unitOfWork.Items.Find(bodyArmorName);
 
             if (item == null)
             {
@@ -359,7 +349,7 @@ namespace MonsterHunt
                 throw new InBattleModeException();
             }
 
-            var item = items.Find(legArmorName);
+            var item = unitOfWork.Items.Find(legArmorName);
 
             if (item == null)
             {
@@ -395,7 +385,7 @@ namespace MonsterHunt
             }
 
             var inventory = Player.Inventory
-                .Select(t => items.Get(t))
+                .Select(t => unitOfWork.Items.Get(t))
                 .ToList();
 
             return inventory.AsReadOnly();
@@ -414,7 +404,7 @@ namespace MonsterHunt
             }
 
             var requests = CurrentMerchant.Requests
-                .Select(t => (items.Get(t.ItemId), t.Price))
+                .Select(t => (unitOfWork.Items.Get(t.ItemId), t.Price))
                 .ToList();
 
             return requests.AsReadOnly();
@@ -433,7 +423,7 @@ namespace MonsterHunt
             }
 
             var offers = CurrentMerchant.Offers
-                .Select(t => (items.Get(t.ItemId), t.Price))
+                .Select(t => (unitOfWork.Items.Get(t.ItemId), t.Price))
                 .ToList();
 
             return offers.AsReadOnly();
@@ -455,7 +445,7 @@ namespace MonsterHunt
                 throw new DefeatedException();
             }
 
-            var item = items.Find(itemName);
+            var item = unitOfWork.Items.Find(itemName);
 
             if (item == null)
             {
@@ -479,7 +469,7 @@ namespace MonsterHunt
 
         internal void BuyItem(string itemName)
         {
-            var item = items.Find(itemName);
+            var item = unitOfWork.Items.Find(itemName);
             if (item == null)
             {
                 throw new InvalidItemException();
@@ -506,7 +496,7 @@ namespace MonsterHunt
 
         internal void SellItem(string itemName)
         {
-            var item = items.Find(itemName);
+            var item = unitOfWork.Items.Find(itemName);
             if (item == null)
             {
                 throw new InvalidItemException();

@@ -9,6 +9,8 @@ namespace MonsterHunt
     {
         static void Main(string[] args)
         {
+            var unitOfWork = new UnitOfWork();
+
             var item1 = CreateItem("Item 1");
             var item2 = CreateItem("Item 2");
             var item3 = CreateItem("Item 3");
@@ -17,14 +19,13 @@ namespace MonsterHunt
             var item6 = CreateBodyArmor("Body armor 1", 1);
             var item7 = CreateLegArmor("Leg armor 1", 1);
 
-            var items = new ItemRepository();
-            items.Add(item1);
-            items.Add(item2);
-            items.Add(item3);
-            items.Add(item4);
-            items.Add(item5);
-            items.Add(item6);
-            items.Add(item7);
+            unitOfWork.Items.Add(item1);
+            unitOfWork.Items.Add(item2);
+            unitOfWork.Items.Add(item3);
+            unitOfWork.Items.Add(item4);
+            unitOfWork.Items.Add(item5);
+            unitOfWork.Items.Add(item6);
+            unitOfWork.Items.Add(item7);
 
             var monster1 = new Monster
             {
@@ -50,9 +51,8 @@ namespace MonsterHunt
                     .Set(3, item3.Id)
             };
 
-            var monsters = new MonsterRepository();
-            monsters.Add(monster1);
-            monsters.Add(monster2);
+            unitOfWork.Monsters.Add(monster1);
+            unitOfWork.Monsters.Add(monster2);
 
             var town1 = new Town
             {
@@ -66,9 +66,8 @@ namespace MonsterHunt
                 Name = "Town 2"
             };
 
-            var towns = new TownRepository();
-            towns.Add(town1);
-            towns.Add(town2);
+            unitOfWork.Towns.Add(town1);
+            unitOfWork.Towns.Add(town2);
 
             var route1 = new Route
             {
@@ -83,8 +82,7 @@ namespace MonsterHunt
                     .Set(5, 6, monster2.Id)
             };
 
-            var routes = new RouteRepository();
-            routes.Add(route1);
+            unitOfWork.Routes.Add(route1);
 
             var merchant1 = new Merchant
             {
@@ -155,11 +153,10 @@ namespace MonsterHunt
                 }
             };
 
-            var merchants = new MerchantRepository();
-            merchants.Add(merchant1);
-            merchants.Add(merchant2);
+            unitOfWork.Merchants.Add(merchant1);
+            unitOfWork.Merchants.Add(merchant2);
 
-            var game = new MonsterHuntGame(towns, routes, monsters, items, merchants);
+            var game = new MonsterHuntGame(unitOfWork);
             game.MonsterDefeated += MonsterDefeated;
             game.MonsterEncountered += MonsterEncountered;
             game.PlayerHealthChanged += PlayerHealthChanged;
