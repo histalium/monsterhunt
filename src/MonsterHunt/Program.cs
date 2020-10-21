@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
+using System.IO;
 using System.Linq;
 
 namespace MonsterHunt
@@ -9,19 +10,16 @@ namespace MonsterHunt
     {
         static void Main(string[] args)
         {
-            var unitOfWork = new UnitOfWork();
+            var unitOfWork = LoadGameData();
 
-            var item1 = CreateItem("Item 1");
-            var item2 = CreateItem("Item 2");
-            var item3 = CreateItem("Item 3");
+            var item1 = unitOfWork.Items.Find("Item 1");
+            var item2 = unitOfWork.Items.Find("Item 2");
+            var item3 = unitOfWork.Items.Find("Item 3");
             var item4 = CreateHealthPotion("Health potion 1", 5);
             var item5 = CreateWeapon("Weapon 1", 1);
             var item6 = CreateBodyArmor("Body armor 1", 1);
             var item7 = CreateLegArmor("Leg armor 1", 1);
 
-            unitOfWork.Items.Add(item1);
-            unitOfWork.Items.Add(item2);
-            unitOfWork.Items.Add(item3);
             unitOfWork.Items.Add(item4);
             unitOfWork.Items.Add(item5);
             unitOfWork.Items.Add(item6);
@@ -209,23 +207,20 @@ namespace MonsterHunt
             }
         }
 
+        private static UnitOfWork LoadGameData()
+        {
+            using var fs = new FileStream("gameData.json", FileMode.Open);
+            var gameData = GameDataLoader.Load(fs);
+
+            return gameData;
+        }
+
         private static IEnumerable<string> ReadLines()
         {
             while (true)
             {
                 yield return Console.ReadLine();
             }
-        }
-
-        private static Item CreateItem(string name)
-        {
-            var item = new Item
-            {
-                Id = Guid.NewGuid(),
-                Name = name
-            };
-
-            return item;
         }
 
         private static Item CreateHealthPotion(string name, int health)

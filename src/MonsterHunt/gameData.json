@@ -1,0 +1,15 @@
+{
+    "items": [{
+        "type": "item",
+        "id": "7aab3a4d-72d1-4c14-bff1-aa3bd2df9cd7",
+        "name": "Item 1"
+    }, {
+        "type": "item",
+        "id": "7b339c78-db60-4622-9ac5-511afc903fbf",
+        "name": "Item 2"
+    }, {
+        "type": "item",
+        "id": "84b2cda1-2062-4b95-8ede-a299e93c7921",
+        "name": "Item 3"
+    }]
+}
