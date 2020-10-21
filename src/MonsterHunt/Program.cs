@@ -158,6 +158,7 @@ namespace MonsterHunt
             game.PlayerHealthChanged += PlayerHealthChanged;
             game.PlayerDefeated += PlayerDefeated;
             game.MonsterHealthChanged += MonsterHealthChanged;
+            game.ArrivedAtLocation += ArrivedAtLocation;
 
             Console.WriteLine($"Welcome in {game.CurrentTown.Name}");
 
@@ -326,17 +327,7 @@ namespace MonsterHunt
             {
                 try
                 {
-                    var monster = game.CurrentMonster;
                     game.Attack();
-                    if (game.CurrentMonster != monster)
-                    {
-                        //todo event
-
-                        if (game.CurrentMonster == null)
-                        {
-                            Console.WriteLine($"Welcome in {game.CurrentTown.Name}");
-                        }
-                    }
                 }
                 catch (NotInBattleModeException)
                 {
@@ -374,6 +365,11 @@ namespace MonsterHunt
         private static void MonsterHealthChanged(object sender, MonsterHealthChangedEventArgs e)
         {
             Console.WriteLine($"Monster's health is {e.Health}");
+        }
+
+        private static void ArrivedAtLocation(object sender, ArrivedAtLocationEventArgs e)
+        {
+            Console.WriteLine($"Welcome in {e.Town.Name}");
         }
 
         private static Action<string> GetInventoryCommand(MonsterHuntGame game)

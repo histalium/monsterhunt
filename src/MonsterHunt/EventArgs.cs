@@ -45,4 +45,14 @@ namespace MonsterHunt
 
         internal int Health { get; }
     }
+
+    public class ArrivedAtLocationEventArgs : EventArgs
+    {
+        internal ArrivedAtLocationEventArgs(Town town)
+        {
+            Town = town;
+        }
+
+        internal Town Town { get; }
+    }
 }

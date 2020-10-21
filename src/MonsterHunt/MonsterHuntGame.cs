@@ -26,6 +26,8 @@ namespace MonsterHunt
 
         public event EventHandler PlayerDefeated;
 
+        public event EventHandler<ArrivedAtLocationEventArgs> ArrivedAtLocation;
+
         public MonsterHuntGame(TownRepository towns, List<Route> routes, List<Monster> monsters, List<Item> items,
             List<Merchant> merchants)
         {
@@ -199,6 +201,7 @@ namespace MonsterHunt
                 if (CurrentMonster == null)
                 {
                     encounters = null;
+                    ArrivedAtLocation?.Invoke(this, new ArrivedAtLocationEventArgs(CurrentTown));
                 }
                 else
                 {
