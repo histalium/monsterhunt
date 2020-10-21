@@ -9,7 +9,7 @@ namespace MonsterHunt
         private readonly TownRepository towns;
         private readonly List<Route> routes;
         private readonly List<Monster> monsters;
-        private readonly List<Item> items;
+        private readonly ItemRepository items;
         private readonly List<Merchant> merchants;
 
         private readonly Dice dice = new Dice();
@@ -28,7 +28,7 @@ namespace MonsterHunt
 
         public event EventHandler<ArrivedAtLocationEventArgs> ArrivedAtLocation;
 
-        public MonsterHuntGame(TownRepository towns, List<Route> routes, List<Monster> monsters, List<Item> items,
+        public MonsterHuntGame(TownRepository towns, List<Route> routes, List<Monster> monsters, ItemRepository items,
             List<Merchant> merchants)
         {
             this.towns = towns;
@@ -175,7 +175,7 @@ namespace MonsterHunt
             }
 
             var attackRollPlayer = dice.Roll();
-            var weaponAttack = Player.WeaponId.HasValue ? ((Weapon)GetItem(Player.WeaponId.Value)).Attack : 0;
+            var weaponAttack = Player.WeaponId.HasValue ? ((Weapon)items.Get(Player.WeaponId.Value)).Attack : 0;
             var attackPlayer = Player.Attack + attackRollPlayer + weaponAttack - CurrentMonster.Defense;
             attackPlayer = Math.Max(0, attackPlayer);
             if (attackPlayer > CurrentMonster.Health)
@@ -216,8 +216,8 @@ namespace MonsterHunt
             }
 
             var attackRollMonster = dice.Roll();
-            var legDefencePlayer = Player.LegArmorId.HasValue ? ((LegArmor)GetItem(Player.LegArmorId.Value)).Defence : 0;
-            var bodyDefencePlayer = Player.BodyArmorId.HasValue ? ((BodyArmor)GetItem(Player.BodyArmorId.Value)).Defence : 0;
+            var legDefencePlayer = Player.LegArmorId.HasValue ? ((LegArmor)items.Get(Player.LegArmorId.Value)).Defence : 0;
+            var bodyDefencePlayer = Player.BodyArmorId.HasValue ? ((BodyArmor)items.Get(Player.BodyArmorId.Value)).Defence : 0;
             var attackMonster = CurrentMonster.Attack + attackRollMonster - Player.Defense - legDefencePlayer - bodyDefencePlayer;
             attackMonster = Math.Max(0, attackMonster);
             if (attackMonster > Player.Health)
@@ -290,7 +290,7 @@ namespace MonsterHunt
                 return new List<Item>();
             }
 
-            var loot = items.Where(t => t.Id == lootId).Single();
+            var loot = items.Get(lootId.Value);
             return new List<Item> { loot };
         }
 
@@ -306,7 +306,7 @@ namespace MonsterHunt
                 throw new InBattleModeException();
             }
 
-            var item = FindItem(weaponName);
+            var item = items.Find(weaponName);
 
             if (item == null)
             {
@@ -346,7 +346,7 @@ namespace MonsterHunt
                 throw new InBattleModeException();
             }
 
-            var item = FindItem(bodyArmorName);
+            var item = items.Find(bodyArmorName);
 
             if (item == null)
             {
@@ -386,7 +386,7 @@ namespace MonsterHunt
                 throw new InBattleModeException();
             }
 
-            var item = FindItem(legArmorName);
+            var item = items.Find(legArmorName);
 
             if (item == null)
             {
@@ -422,7 +422,7 @@ namespace MonsterHunt
             }
 
             var inventory = Player.Inventory
-                .Select(t => GetItem(t))
+                .Select(t => items.Get(t))
                 .ToList();
 
             return inventory.AsReadOnly();
@@ -441,7 +441,7 @@ namespace MonsterHunt
             }
 
             var requests = CurrentMerchant.Requests
-                .Select(t => (GetItem(t.ItemId), t.Price))
+                .Select(t => (items.Get(t.ItemId), t.Price))
                 .ToList();
 
             return requests.AsReadOnly();
@@ -460,19 +460,10 @@ namespace MonsterHunt
             }
 
             var offers = CurrentMerchant.Offers
-                .Select(t => (GetItem(t.ItemId), t.Price))
+                .Select(t => (items.Get(t.ItemId), t.Price))
                 .ToList();
 
             return offers.AsReadOnly();
-        }
-
-        private Item FindItem(string name)
-        {
-            var item = items
-                .Where(t => AreEqual(name, t.Name))
-                .FirstOrDefault();
-
-            return item;
         }
 
         private bool HasItem(Item item)
@@ -484,15 +475,6 @@ namespace MonsterHunt
             return hasItem;
         }
 
-        private Item GetItem(Guid itemId)
-        {
-            var item = items
-                .Where(t => t.Id == itemId)
-                .Single();
-
-            return item;
-        }
-
         internal void UseItem(string itemName)
         {
             if (Player.Health <= 0)
@@ -500,7 +482,7 @@ namespace MonsterHunt
                 throw new DefeatedException();
             }
 
-            var item = FindItem(itemName);
+            var item = items.Find(itemName);
 
             if (item == null)
             {
@@ -524,7 +506,7 @@ namespace MonsterHunt
 
         internal void BuyItem(string itemName)
         {
-            var item = FindItem(itemName);
+            var item = items.Find(itemName);
             if (item == null)
             {
                 throw new InvalidItemException();
@@ -551,7 +533,7 @@ namespace MonsterHunt
 
         internal void SellItem(string itemName)
         {
-            var item = FindItem(itemName);
+            var item = items.Find(itemName);
             if (item == null)
             {
                 throw new InvalidItemException();

@@ -7,7 +7,6 @@ namespace MonsterHunt
 {
     class Program
     {
-        private static List<Item> items;
         private static List<Monster> monsters;
         private static List<Route> routes;
         private static List<Merchant> merchants;
@@ -22,7 +21,14 @@ namespace MonsterHunt
             var item6 = CreateBodyArmor("Body armor 1", 1);
             var item7 = CreateLegArmor("Leg armor 1", 1);
 
-            items = new List<Item> { item1, item2, item3, item4, item5, item6, item7 };
+            var items = new ItemRepository();
+            items.Add(item1);
+            items.Add(item2);
+            items.Add(item3);
+            items.Add(item4);
+            items.Add(item5);
+            items.Add(item6);
+            items.Add(item7);
 
             var monster1 = new Monster
             {
