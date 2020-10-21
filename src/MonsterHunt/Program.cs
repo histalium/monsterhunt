@@ -390,16 +390,15 @@ namespace MonsterHunt
         {
             Action<string> command = (v) =>
             {
-                if (game.CurrentMerchant != null)
+                try
                 {
-                    var merchant = game.CurrentMerchant;
-                    foreach (var request in merchant.Requests)
+                    var requests = game.GetRequests();
+                    foreach (var (item, price) in requests)
                     {
-                        var item = FindItem(request.ItemId);
-                        Console.WriteLine($"{item.Name} ({request.Price}c)");
+                        Console.WriteLine($"{item.Name} ({price}c)");
                     }
                 }
-                else
+                catch (NotAtAMerchantException)
                 {
                     Console.WriteLine("Not at a merchant");
                 }

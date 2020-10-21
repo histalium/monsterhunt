@@ -428,6 +428,26 @@ namespace MonsterHunt
             return inventory.AsReadOnly();
         }
 
+
+        internal IReadOnlyCollection<(Item Item, int Price)> GetRequests()
+        {
+            if (Player.Health <= 0)
+            {
+                throw new DefeatedException();
+            }
+
+            if (CurrentMerchant == null)
+            {
+                throw new NotAtAMerchantException();
+            }
+
+            var requests = CurrentMerchant.Requests
+                .Select(t => (GetItem(t.ItemId), t.Price))
+                .ToList();
+
+            return requests.AsReadOnly();
+        }
+
         private Item FindItem(string name)
         {
             var item = items
