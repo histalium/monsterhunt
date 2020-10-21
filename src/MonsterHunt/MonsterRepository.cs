@@ -21,5 +21,14 @@ namespace MonsterHunt
 
             return monster;
         }
+
+        public Monster Find(string monsterName)
+        {
+            var monster = monsters
+                .Where(t => t.Name.AreEqualIgnoreCase(monsterName))
+                .SingleOrDefault();
+
+            return monster;
+        }
     }
 }

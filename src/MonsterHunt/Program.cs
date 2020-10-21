@@ -25,32 +25,8 @@ namespace MonsterHunt
             unitOfWork.Items.Add(item6);
             unitOfWork.Items.Add(item7);
 
-            var monster1 = new Monster
-            {
-                Id = Guid.NewGuid(),
-                Name = "Monster 1",
-                Attack = 0,
-                Defense = 1,
-                Health = 15,
-                Loot = new RollResult()
-                    .Set(1, 2, item1.Id)
-                    .Set(3, item2.Id)
-            };
-
-            var monster2 = new Monster
-            {
-                Id = Guid.NewGuid(),
-                Name = "Monster 2",
-                Attack = 1,
-                Defense = 1,
-                Health = 12,
-                Loot = new RollResult()
-                    .Set(1, 2, item1.Id)
-                    .Set(3, item3.Id)
-            };
-
-            unitOfWork.Monsters.Add(monster1);
-            unitOfWork.Monsters.Add(monster2);
+            var monster1 = unitOfWork.Monsters.Find("Monster 1");
+            var monster2 = unitOfWork.Monsters.Find("Monster 2");
 
             var town1 = unitOfWork.Towns.Find("Town 1");
             var town2 = unitOfWork.Towns.Find("Town 2");

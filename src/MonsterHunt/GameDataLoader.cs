@@ -1,3 +1,4 @@
+using System;
 using System.IO;
 using System.Text.Json;
 
@@ -38,6 +39,12 @@ namespace MonsterHunt
                 unitOfWork.Towns.Add(town);
             }
 
+            foreach (var monsterData in fileData.Monsters)
+            {
+                var monster = CreateMonster(monsterData);
+                unitOfWork.Monsters.Add(monster);
+            }
+
             return unitOfWork;
         }
 
@@ -61,6 +68,42 @@ namespace MonsterHunt
             };
 
             return town;
+        }
+
+        private static Monster CreateMonster(JsonFileGameData.Monster monsterData)
+        {
+            var monster = new Monster
+            {
+                Id = monsterData.Id,
+                Name = monsterData.Name,
+                Attack = monsterData.Attack,
+                Defense = monsterData.Defense,
+                Health = monsterData.Health,
+                Loot = new RollResult()
+                    .Set(1, GetRollResultId(monsterData.Loot?.Roll1))
+                    .Set(2, GetRollResultId(monsterData.Loot?.Roll2))
+                    .Set(3, GetRollResultId(monsterData.Loot?.Roll3))
+                    .Set(4, GetRollResultId(monsterData.Loot?.Roll4))
+                    .Set(5, GetRollResultId(monsterData.Loot?.Roll5))
+                    .Set(6, GetRollResultId(monsterData.Loot?.Roll6))
+            };
+
+            return monster;
+        }
+
+        private static Guid? GetRollResultId(Guid? id)
+        {
+            if (!id.HasValue)
+            {
+                return null;
+            }
+
+            if (id.Value == Guid.Empty)
+            {
+                return null;
+            }
+
+            return id.Value;
         }
     }
 }

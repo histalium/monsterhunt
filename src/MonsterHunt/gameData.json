@@ -18,5 +18,28 @@
     }, {
         "id": "5684fe3d-08fa-4f9c-94dd-ecfecaadc51c",
         "name": "Town 2"
+    }],
+    "monsters": [{
+        "id": "ebb8f791-f8bf-4465-857d-27dfdd5ed05c",
+        "name": "Monster 1",
+        "attack": 0,
+        "defense": 1,
+        "health": 15,
+        "loot": {
+            "roll1": "7aab3a4d-72d1-4c14-bff1-aa3bd2df9cd7",
+            "roll2": "7aab3a4d-72d1-4c14-bff1-aa3bd2df9cd7",
+            "roll3": "7b339c78-db60-4622-9ac5-511afc903fbf"
+        }
+    }, {
+        "id": "d799e845-01e7-4e3c-bc0a-325ed15dfa27",
+        "name": "Monster 2",
+        "attack": 1,
+        "defense": 1,
+        "health": 12,
+        "loot": {
+            "roll1": "7aab3a4d-72d1-4c14-bff1-aa3bd2df9cd7",
+            "roll2": "7aab3a4d-72d1-4c14-bff1-aa3bd2df9cd7",
+            "roll3": "84b2cda1-2062-4b95-8ede-a299e93c7921"
+        }
     }]
 }
