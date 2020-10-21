@@ -411,27 +411,21 @@ namespace MonsterHunt
         {
             Action<string> command = (v) =>
             {
-                if (game.CurrentMerchant != null)
+                try
                 {
-                    var merchant = game.CurrentMerchant;
-                    foreach (var offer in merchant.Offers)
+                    var requests = game.GetOffers();
+                    foreach (var (item, price) in requests)
                     {
-                        var item = FindItem(offer.ItemId);
-                        Console.WriteLine($"{item.Name} ({offer.Price}c)");
+                        Console.WriteLine($"{item.Name} ({price}c)");
                     }
                 }
-                else
+                catch (NotAtAMerchantException)
                 {
                     Console.WriteLine("Not at a merchant");
                 }
             };
 
             return command;
-        }
-
-        private static Item FindItem(Guid itemId)
-        {
-            return items.Where(t => t.Id == itemId).First();
         }
 
         private static Action<string> GetSellCommand(MonsterHuntGame game)

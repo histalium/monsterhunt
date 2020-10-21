@@ -428,7 +428,6 @@ namespace MonsterHunt
             return inventory.AsReadOnly();
         }
 
-
         internal IReadOnlyCollection<(Item Item, int Price)> GetRequests()
         {
             if (Player.Health <= 0)
@@ -446,6 +445,25 @@ namespace MonsterHunt
                 .ToList();
 
             return requests.AsReadOnly();
+        }
+
+        internal IReadOnlyCollection<(Item Item, int Price)> GetOffers()
+        {
+            if (Player.Health <= 0)
+            {
+                throw new DefeatedException();
+            }
+
+            if (CurrentMerchant == null)
+            {
+                throw new NotAtAMerchantException();
+            }
+
+            var offers = CurrentMerchant.Offers
+                .Select(t => (GetItem(t.ItemId), t.Price))
+                .ToList();
+
+            return offers.AsReadOnly();
         }
 
         private Item FindItem(string name)
