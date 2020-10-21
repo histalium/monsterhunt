@@ -7,7 +7,6 @@ namespace MonsterHunt
 {
     class Program
     {
-        private static List<Monster> monsters;
         private static List<Route> routes;
         private static List<Merchant> merchants;
 
@@ -54,7 +53,9 @@ namespace MonsterHunt
                     .Set(3, item3.Id)
             };
 
-            monsters = new List<Monster> { monster1, monster2 };
+            var monsters = new MonsterRepository();
+            monsters.Add(monster1);
+            monsters.Add(monster2);
 
             var town1 = new Town
             {

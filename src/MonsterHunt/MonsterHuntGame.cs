@@ -8,7 +8,7 @@ namespace MonsterHunt
     {
         private readonly TownRepository towns;
         private readonly List<Route> routes;
-        private readonly List<Monster> monsters;
+        private readonly MonsterRepository monsters;
         private readonly ItemRepository items;
         private readonly List<Merchant> merchants;
 
@@ -28,7 +28,7 @@ namespace MonsterHunt
 
         public event EventHandler<ArrivedAtLocationEventArgs> ArrivedAtLocation;
 
-        public MonsterHuntGame(TownRepository towns, List<Route> routes, List<Monster> monsters, ItemRepository items,
+        public MonsterHuntGame(TownRepository towns, List<Route> routes, MonsterRepository monsters, ItemRepository items,
             List<Merchant> merchants)
         {
             this.towns = towns;
@@ -138,7 +138,7 @@ namespace MonsterHunt
 
         private Monster CreateMonsterInstance(Guid monsterId)
         {
-            var monster = GetMonster(monsterId);
+            var monster = monsters.Get(monsterId);
 
             var copy = new Monster
             {
@@ -151,15 +151,6 @@ namespace MonsterHunt
             };
 
             return copy;
-        }
-
-        private Monster GetMonster(Guid monsterId)
-        {
-            var monster = monsters
-                .Where(t => t.Id == monsterId)
-                .Single();
-
-            return monster;
         }
 
         internal void Attack()
