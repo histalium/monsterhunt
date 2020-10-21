@@ -11,5 +11,12 @@
         "type": "item",
         "id": "84b2cda1-2062-4b95-8ede-a299e93c7921",
         "name": "Item 3"
+    }],
+    "towns": [{
+        "id": "72debef2-2b9a-402e-90b6-502c243abc44",
+        "name": "Town 1"
+    }, {
+        "id": "5684fe3d-08fa-4f9c-94dd-ecfecaadc51c",
+        "name": "Town 2"
     }]
 }

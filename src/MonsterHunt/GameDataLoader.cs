@@ -32,6 +32,12 @@ namespace MonsterHunt
                 }
             }
 
+            foreach (var townData in fileData.Towns)
+            {
+                var town = CreateTown(townData);
+                unitOfWork.Towns.Add(town);
+            }
+
             return unitOfWork;
         }
 
@@ -44,6 +50,17 @@ namespace MonsterHunt
             };
 
             return item;
+        }
+
+        private static Town CreateTown(JsonFileGameData.Town townData)
+        {
+            var town = new Town
+            {
+                Id = townData.Id,
+                Name = townData.Name
+            };
+
+            return town;
         }
     }
 }

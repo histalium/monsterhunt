@@ -52,20 +52,8 @@ namespace MonsterHunt
             unitOfWork.Monsters.Add(monster1);
             unitOfWork.Monsters.Add(monster2);
 
-            var town1 = new Town
-            {
-                Id = Guid.NewGuid(),
-                Name = "Town 1"
-            };
-
-            var town2 = new Town
-            {
-                Id = Guid.NewGuid(),
-                Name = "Town 2"
-            };
-
-            unitOfWork.Towns.Add(town1);
-            unitOfWork.Towns.Add(town2);
+            var town1 = unitOfWork.Towns.Find("Town 1");
+            var town2 = unitOfWork.Towns.Find("Town 2");
 
             var route1 = new Route
             {
