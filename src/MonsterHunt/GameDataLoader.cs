@@ -45,6 +45,12 @@ namespace MonsterHunt
                 unitOfWork.Monsters.Add(monster);
             }
 
+            foreach (var routeData in fileData.Routes)
+            {
+                var route = CreateRoute(routeData);
+                unitOfWork.Routes.Add(route);
+            }
+
             return unitOfWork;
         }
 
@@ -89,6 +95,25 @@ namespace MonsterHunt
             };
 
             return monster;
+        }
+
+        private static Route CreateRoute(JsonFileGameData.Route routeData)
+        {
+            var route = new Route
+            {
+                Id = routeData.Id,
+                Towns = routeData.Towns,
+                NumberOfMonsters = routeData.NumberOfMonsters,
+                Monsters = new RollResult()
+                    .Set(1, GetRollResultId(routeData.Monsters?.Roll1))
+                    .Set(2, GetRollResultId(routeData.Monsters?.Roll2))
+                    .Set(3, GetRollResultId(routeData.Monsters?.Roll3))
+                    .Set(4, GetRollResultId(routeData.Monsters?.Roll4))
+                    .Set(5, GetRollResultId(routeData.Monsters?.Roll5))
+                    .Set(6, GetRollResultId(routeData.Monsters?.Roll6))
+            };
+
+            return route;
         }
 
         private static Guid? GetRollResultId(Guid? id)

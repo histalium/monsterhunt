@@ -41,5 +41,21 @@
             "roll2": "7aab3a4d-72d1-4c14-bff1-aa3bd2df9cd7",
             "roll3": "84b2cda1-2062-4b95-8ede-a299e93c7921"
         }
+    }],
+    "routes": [{
+        "id": "aebafb50-d73e-4806-bad5-c9aec412d8a7",
+        "towns": [
+            "72debef2-2b9a-402e-90b6-502c243abc44",
+            "5684fe3d-08fa-4f9c-94dd-ecfecaadc51c"
+        ],
+        "numberOfMonsters": 2,
+        "monsters": {
+            "roll1": "ebb8f791-f8bf-4465-857d-27dfdd5ed05c",
+            "roll2": "ebb8f791-f8bf-4465-857d-27dfdd5ed05c",
+            "roll3": "ebb8f791-f8bf-4465-857d-27dfdd5ed05c",
+            "roll4": "ebb8f791-f8bf-4465-857d-27dfdd5ed05c",
+            "roll5": "d799e845-01e7-4e3c-bc0a-325ed15dfa27",
+            "roll6": "d799e845-01e7-4e3c-bc0a-325ed15dfa27"
+        }
     }]
 }
