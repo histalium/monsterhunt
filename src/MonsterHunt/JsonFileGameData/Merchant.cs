@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace MonsterHunt
+namespace MonsterHunt.JsonFileGameData
 {
     internal class Merchant
     {

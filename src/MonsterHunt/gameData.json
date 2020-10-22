@@ -77,5 +77,45 @@
             "roll5": "d799e845-01e7-4e3c-bc0a-325ed15dfa27",
             "roll6": "d799e845-01e7-4e3c-bc0a-325ed15dfa27"
         }
+    }],
+    "merchants": [{
+        "id": "ceb80487-55c8-45ac-be1b-52997f986c05",
+        "name": "Merchant 1",
+        "town": "72debef2-2b9a-402e-90b6-502c243abc44",
+        "requests": [{
+            "item": "7aab3a4d-72d1-4c14-bff1-aa3bd2df9cd7",
+            "price": 1
+        }, {
+            "item": "7b339c78-db60-4622-9ac5-511afc903fbf",
+            "price": 2
+        }],
+        "offers": [{
+            "item": "e19cd790-d555-44d5-b772-a51e69ce279e",
+            "price": 5
+        }, {
+            "item": "6a53a144-55e9-4f90-8308-97ab1fb088ca",
+            "price": 7
+        }, {
+            "item": "9e4b1c98-9dc7-4695-9236-4fcebae9d75d",
+            "price": 7
+        }, {
+            "item": "9d434843-ff78-42b0-8dbb-286ce8d811d1",
+            "price": 7
+        }]
+    }, {
+        "id": "84875996-9340-48b6-8142-2489359b04c7",
+        "name": "Merchant 2",
+        "town": "5684fe3d-08fa-4f9c-94dd-ecfecaadc51c",
+        "requests": [{
+            "item": "7aab3a4d-72d1-4c14-bff1-aa3bd2df9cd7",
+            "price": 1
+        }, {
+            "item": "84b2cda1-2062-4b95-8ede-a299e93c7921",
+            "price": 3
+        }],
+        "offers": [{
+            "item": "e19cd790-d555-44d5-b772-a51e69ce279e",
+            "price": 5
+        }]
     }]
 }

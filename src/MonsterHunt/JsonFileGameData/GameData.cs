@@ -8,5 +8,6 @@ namespace MonsterHunt.JsonFileGameData
         public List<Town> Towns { get; set; }
         public List<Monster> Monsters { get; set; }
         public List<Route> Routes { get; set; }
+        public List<Merchant> Merchants { get; set; }
     }
 }

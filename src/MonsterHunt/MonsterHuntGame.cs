@@ -235,7 +235,7 @@ namespace MonsterHunt
                 throw new SameMerchantException();
             }
 
-            if (merchant.TownId != CurrentTown.Id)
+            if (merchant.Town != CurrentTown.Id)
             {
                 throw new MerchantNotInTownException();
             }
@@ -404,7 +404,7 @@ namespace MonsterHunt
             }
 
             var requests = CurrentMerchant.Requests
-                .Select(t => (unitOfWork.Items.Get(t.ItemId), t.Price))
+                .Select(t => (unitOfWork.Items.Get(t.Item), t.Price))
                 .ToList();
 
             return requests.AsReadOnly();
@@ -423,7 +423,7 @@ namespace MonsterHunt
             }
 
             var offers = CurrentMerchant.Offers
-                .Select(t => (unitOfWork.Items.Get(t.ItemId), t.Price))
+                .Select(t => (unitOfWork.Items.Get(t.Item), t.Price))
                 .ToList();
 
             return offers.AsReadOnly();
@@ -478,17 +478,17 @@ namespace MonsterHunt
             {
                 throw new NotAtAMerchantException();
             }
-            else if (!CurrentMerchant.Offers.Where(t => t.ItemId == item.Id).Any())
+            else if (!CurrentMerchant.Offers.Where(t => t.Item == item.Id).Any())
             {
                 throw new MerchantDoesNotOfferException();
             }
-            else if (Player.Coins < CurrentMerchant.Offers.Where(t => t.ItemId == item.Id).Single().Price)
+            else if (Player.Coins < CurrentMerchant.Offers.Where(t => t.Item == item.Id).Single().Price)
             {
                 throw new NotEnoughCoinsException();
             }
             else
             {
-                var price = CurrentMerchant.Offers.Where(t => t.ItemId == item.Id).Single().Price;
+                var price = CurrentMerchant.Offers.Where(t => t.Item == item.Id).Single().Price;
                 Player.Inventory.Add(item.Id);
                 Player.Coins -= price;
             }
@@ -509,13 +509,13 @@ namespace MonsterHunt
             {
                 throw new DoNotOwnItemException();
             }
-            else if (!CurrentMerchant.Requests.Where(t => t.ItemId == item.Id).Any())
+            else if (!CurrentMerchant.Requests.Where(t => t.Item == item.Id).Any())
             {
                 throw new MerchantDoesNotRequestException();
             }
             else
             {
-                var value = CurrentMerchant.Requests.Where(t => t.ItemId == item.Id).Single().Price;
+                var value = CurrentMerchant.Requests.Where(t => t.Item == item.Id).Single().Price;
                 Player.Inventory.Remove(item.Id);
                 Player.Coins += value;
             }

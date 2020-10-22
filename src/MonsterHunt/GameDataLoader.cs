@@ -1,5 +1,6 @@
 using System;
 using System.IO;
+using System.Linq;
 using System.Text.Json;
 
 namespace MonsterHunt
@@ -69,6 +70,12 @@ namespace MonsterHunt
             {
                 var route = CreateRoute(routeData);
                 unitOfWork.Routes.Add(route);
+            }
+
+            foreach (var merchantData in fileData.Merchants)
+            {
+                var merchant = CreateMerchant(merchantData);
+                unitOfWork.Merchants.Add(merchant);
             }
 
             return unitOfWork;
@@ -182,6 +189,20 @@ namespace MonsterHunt
             };
 
             return route;
+        }
+
+        private static Merchant CreateMerchant(JsonFileGameData.Merchant merchantData)
+        {
+            var merchant = new Merchant
+            {
+                Id = merchantData.Id,
+                Name = merchantData.Name,
+                Town = merchantData.Town,
+                Offers = merchantData.Offers.Select(t => new ItemPrice { Item = t.Item, Price = t.Price }).ToList(),
+                Requests = merchantData.Requests.Select(t => new ItemPrice { Item = t.Item, Price = t.Price }).ToList(),
+            };
+
+            return merchant;
         }
 
         private static Guid? GetRollResultId(Guid? id)

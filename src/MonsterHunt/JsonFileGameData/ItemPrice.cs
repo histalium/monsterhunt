@@ -1,6 +1,6 @@
 using System;
 
-namespace MonsterHunt
+namespace MonsterHunt.JsonFileGameData
 {
     internal class ItemPrice
     {
