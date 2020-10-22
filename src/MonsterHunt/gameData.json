@@ -11,6 +11,26 @@
         "type": "item",
         "id": "84b2cda1-2062-4b95-8ede-a299e93c7921",
         "name": "Item 3"
+    }, {
+        "type": "health potion",
+        "id": "e19cd790-d555-44d5-b772-a51e69ce279e",
+        "name": "Health potion 1",
+        "health": 5
+    }, {
+        "type": "weapon",
+        "id": "6a53a144-55e9-4f90-8308-97ab1fb088ca",
+        "name": "Weapon 1",
+        "attack": 1
+    }, {
+        "type": "body armor",
+        "id": "9e4b1c98-9dc7-4695-9236-4fcebae9d75d",
+        "name": "Body armor 1",
+        "defence": 1
+    }, {
+        "type": "leg armor",
+        "id": "9d434843-ff78-42b0-8dbb-286ce8d811d1",
+        "name": "Leg armor 1",
+        "defence": 1
     }],
     "towns": [{
         "id": "72debef2-2b9a-402e-90b6-502c243abc44",

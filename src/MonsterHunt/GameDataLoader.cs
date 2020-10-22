@@ -21,6 +21,10 @@ namespace MonsterHunt
             var unitOfWork = new UnitOfWork();
 
             const string itemType = "item";
+            const string healthPotionType = "health potion";
+            const string weaponType = "weapon";
+            const string bodyArmorType = "body armor";
+            const string legArmorType = "leg armor";
 
             foreach (var itemData in fileData.Items)
             {
@@ -29,6 +33,22 @@ namespace MonsterHunt
                     case itemType:
                         var item = CreateItem(itemData);
                         unitOfWork.Items.Add(item);
+                        break;
+                    case healthPotionType:
+                        var healthPotion = CreateHealthPotion(itemData);
+                        unitOfWork.Items.Add(healthPotion);
+                        break;
+                    case weaponType:
+                        var weapon = CreateWeapon(itemData);
+                        unitOfWork.Items.Add(weapon);
+                        break;
+                    case bodyArmorType:
+                        var bodyArmor = CreateBodyArmor(itemData);
+                        unitOfWork.Items.Add(bodyArmor);
+                        break;
+                    case legArmorType:
+                        var legArmor = CreateLegArmor(itemData);
+                        unitOfWork.Items.Add(legArmor);
                         break;
                 }
             }
@@ -60,6 +80,54 @@ namespace MonsterHunt
             {
                 Id = itemData.Id,
                 Name = itemData.Name
+            };
+
+            return item;
+        }
+
+        public static HealthPotion CreateHealthPotion(JsonFileGameData.Item itemData)
+        {
+            var item = new HealthPotion
+            {
+                Id = itemData.Id,
+                Name = itemData.Name,
+                Health = itemData.Health
+            };
+
+            return item;
+        }
+
+        public static Weapon CreateWeapon(JsonFileGameData.Item itemData)
+        {
+            var item = new Weapon
+            {
+                Id = itemData.Id,
+                Name = itemData.Name,
+                Attack = itemData.Attack
+            };
+
+            return item;
+        }
+
+        public static BodyArmor CreateBodyArmor(JsonFileGameData.Item itemData)
+        {
+            var item = new BodyArmor
+            {
+                Id = itemData.Id,
+                Name = itemData.Name,
+                Defence = itemData.Defence
+            };
+
+            return item;
+        }
+
+        public static LegArmor CreateLegArmor(JsonFileGameData.Item itemData)
+        {
+            var item = new LegArmor
+            {
+                Id = itemData.Id,
+                Name = itemData.Name,
+                Defence = itemData.Defence
             };
 
             return item;

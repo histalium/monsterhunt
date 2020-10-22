@@ -15,15 +15,10 @@ namespace MonsterHunt
             var item1 = unitOfWork.Items.Find("Item 1");
             var item2 = unitOfWork.Items.Find("Item 2");
             var item3 = unitOfWork.Items.Find("Item 3");
-            var item4 = CreateHealthPotion("Health potion 1", 5);
-            var item5 = CreateWeapon("Weapon 1", 1);
-            var item6 = CreateBodyArmor("Body armor 1", 1);
-            var item7 = CreateLegArmor("Leg armor 1", 1);
-
-            unitOfWork.Items.Add(item4);
-            unitOfWork.Items.Add(item5);
-            unitOfWork.Items.Add(item6);
-            unitOfWork.Items.Add(item7);
+            var item4 = unitOfWork.Items.Find("Health potion 1");
+            var item5 = unitOfWork.Items.Find("Weapon 1");
+            var item6 = unitOfWork.Items.Find("Body armor 1");
+            var item7 = unitOfWork.Items.Find("Leg armor 1");
 
             var town1 = unitOfWork.Towns.Find("Town 1");
             var town2 = unitOfWork.Towns.Find("Town 2");
