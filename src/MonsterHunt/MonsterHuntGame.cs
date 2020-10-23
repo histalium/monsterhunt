@@ -494,6 +494,29 @@ namespace MonsterHunt
             }
         }
 
+        internal Stats GetStats()
+        {
+            var weapon = Player.WeaponId.HasValue ? (Weapon)unitOfWork.Items.Get(Player.WeaponId.Value) : null;
+            var legDefence = Player.LegArmorId.HasValue ? (LegArmor)unitOfWork.Items.Get(Player.LegArmorId.Value) : null;
+            var bodyDefence = Player.BodyArmorId.HasValue ? (BodyArmor)unitOfWork.Items.Get(Player.BodyArmorId.Value) : null;
+
+            var stats = new Stats
+            {
+                Health = Player.Health,
+                MaxHealth = Player.MaxHealth,
+                Attack = Player.Attack + (weapon?.Attack ?? 0),
+                Defence = Player.Defense + (legDefence?.Defence ?? 0) + (bodyDefence?.Defence ?? 0),
+                WeaponName = weapon?.Name,
+                WeaponAttack = weapon?.Attack ?? 0,
+                BodyArmorName = bodyDefence?.Name,
+                BodyArmorDefence = bodyDefence?.Defence ?? 0,
+                LegArmorName = legDefence?.Name,
+                LegArmorDefence = legDefence?.Defence ?? 0
+            };
+
+            return stats;
+        }
+
         internal void SellItem(string itemName)
         {
             var item = unitOfWork.Items.Find(itemName);

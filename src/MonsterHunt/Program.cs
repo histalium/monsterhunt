@@ -32,6 +32,7 @@ namespace MonsterHunt
             commands.Add("buy ", GetBuyCommand(game));
             commands.Add("use ", GetUseCommand(game));
             commands.Add("equip ", GetEquipCommand(game));
+            commands.Add("stats", GetStatsCommand(game));
 
             foreach (var command in ReadLines())
             {
@@ -439,6 +440,45 @@ namespace MonsterHunt
                 }
 
                 Console.WriteLine("Can't equip item");
+            };
+
+            return command;
+        }
+
+        private static Action<string> GetStatsCommand(MonsterHuntGame game)
+        {
+            Action<string> command = (v) =>
+            {
+                var stats = game.GetStats();
+
+                Console.WriteLine($"Health:     {stats.Health}/{stats.MaxHealth}");
+                Console.WriteLine($"Attack:     {stats.Attack}");
+                Console.WriteLine($"Defence:    {stats.Defence}");
+                Console.WriteLine();
+                if (string.IsNullOrEmpty(stats.WeaponName))
+                {
+                    Console.WriteLine($"Weapon:");
+                }
+                else
+                {
+                    Console.WriteLine($"Weapon:     {stats.WeaponName} (Attack +{stats.WeaponAttack})");
+                }
+                if (string.IsNullOrEmpty(stats.BodyArmorName))
+                {
+                    Console.WriteLine($"Body armor:");
+                }
+                else
+                {
+                    Console.WriteLine($"Body armor: {stats.BodyArmorName} (Defence +{stats.BodyArmorDefence})");
+                }
+                if (string.IsNullOrEmpty(stats.LegArmorName))
+                {
+                    Console.WriteLine($"Leg armor:");
+                }
+                else
+                {
+                    Console.WriteLine($"Leg armor:  {stats.LegArmorName} (Defence +{stats.LegArmorDefence})");
+                }
             };
 
             return command;
