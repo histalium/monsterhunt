@@ -38,11 +38,6 @@ namespace MonsterHunt
 
         public Player Player { get; }
 
-        private static bool AreEqual(string value1, string value2)
-        {
-            return value1.Equals(value2, StringComparison.InvariantCultureIgnoreCase);
-        }
-
         private static Player CreatePlayer()
         {
             var player = new Player
