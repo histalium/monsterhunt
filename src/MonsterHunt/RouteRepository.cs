@@ -13,10 +13,10 @@ namespace MonsterHunt
             routes.Add(route);
         }
 
-        public Route FindBetweenTowns(Guid townId1, Guid townId2)
+        public Route FindBetweenTowns(Guid startingPoint, Guid destination)
         {
             var route = routes
-                .Where(t => t.Towns.Contains(townId1) && t.Towns.Contains(townId2))
+                .Where(t => t.StartingPoint == startingPoint && t.Destination == destination)
                 .SingleOrDefault();
 
             return route;

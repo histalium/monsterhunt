@@ -177,7 +177,8 @@ namespace MonsterHunt
             var route = new Route
             {
                 Id = routeData.Id,
-                Towns = routeData.Towns,
+                StartingPoint = routeData.StartingPoint,
+                Destination = routeData.Destination,
                 NumberOfMonsters = routeData.NumberOfMonsters,
                 Monsters = new RollResult()
                     .Set(1, GetRollResultId(routeData.Monsters?.Roll1))

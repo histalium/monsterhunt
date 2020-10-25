@@ -7,7 +7,9 @@ namespace MonsterHunt
     {
         public Guid Id { get; set; }
 
-        public List<Guid> Towns { get; set; }
+        public Guid StartingPoint { get; set; }
+
+        public Guid Destination { get; set; }
 
         public int NumberOfMonsters { get; set; }
 
