@@ -24,5 +24,7 @@ namespace MonsterHunt
         public Guid? BodyArmorId { get; set; }
 
         public Guid? LegArmorId { get; set; }
+
+        public List<Guid> Recipes { get; set; }
     }
 }

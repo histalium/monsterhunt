@@ -48,7 +48,8 @@ namespace MonsterHunt
                 Health = 30,
                 MaxHealth = 30,
                 Inventory = new List<Guid>(),
-                Coins = 50
+                Coins = 50,
+                Recipes = new List<Guid>()
             };
 
             return player;
@@ -537,6 +538,27 @@ namespace MonsterHunt
                 Player.Inventory.Remove(item.Id);
                 Player.Coins += value;
             }
+        }
+
+        internal void Learn(string recipeName)
+        {
+            var item = unitOfWork.Items.Find(recipeName);
+            if (item == null)
+            {
+                throw new InvalidItemException();
+            }
+            if (!Player.Inventory.Contains(item.Id))
+            {
+                throw new DoNotOwnItemException();
+            }
+            var recipe = item as Recipe;
+            if (recipe == null)
+            {
+                throw new ItemNotRecipeException();
+            }
+
+            Player.Recipes.Add(recipe.Id);
+            Player.Inventory.Remove(recipe.Id);
         }
     }
 }

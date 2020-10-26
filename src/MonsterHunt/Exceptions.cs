@@ -96,4 +96,9 @@ namespace MonsterHunt
     {
         public MerchantDoesNotRequestException() : base("Merchant does not request item") { }
     }
+
+    internal class ItemNotRecipeException : Exception
+    {
+        public ItemNotRecipeException() : base("Item is not a recipe") { }
+    }
 }

@@ -33,6 +33,7 @@ namespace MonsterHunt
             commands.Add("use ", GetUseCommand(game));
             commands.Add("equip ", GetEquipCommand(game));
             commands.Add("stats", GetStatsCommand(game));
+            commands.Add("learn ", GetLearnCommand(game));
 
             foreach (var command in ReadLines())
             {
@@ -478,6 +479,31 @@ namespace MonsterHunt
                 else
                 {
                     Console.WriteLine($"Leg armor:  {stats.LegArmorName} (Defence +{stats.LegArmorDefence})");
+                }
+            };
+
+            return command;
+        }
+
+        private static Action<string> GetLearnCommand(MonsterHuntGame game)
+        {
+            Action<string> command = (recipe) =>
+            {
+                try
+                {
+                    game.Learn(recipe);
+                }
+                catch (InvalidItemException)
+                {
+                    Console.WriteLine("Invalid item");
+                }
+                catch (DoNotOwnItemException)
+                {
+                    Console.WriteLine("You don't have this item");
+                }
+                catch (ItemNotRecipeException)
+                {
+                    Console.WriteLine("Can't learn item");
                 }
             };
 
