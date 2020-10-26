@@ -26,6 +26,7 @@ namespace MonsterHunt
             const string weaponType = "weapon";
             const string bodyArmorType = "body armor";
             const string legArmorType = "leg armor";
+            const string recipeType = "recipe";
 
             foreach (var itemData in fileData.Items)
             {
@@ -50,6 +51,10 @@ namespace MonsterHunt
                     case legArmorType:
                         var legArmor = CreateLegArmor(itemData);
                         unitOfWork.Items.Add(legArmor);
+                        break;
+                    case recipeType:
+                        var recipe = CreateRecipe(itemData);
+                        unitOfWork.Items.Add(recipe);
                         break;
                 }
             }
@@ -135,6 +140,19 @@ namespace MonsterHunt
                 Id = itemData.Id,
                 Name = itemData.Name,
                 Defence = itemData.Defence
+            };
+
+            return item;
+        }
+
+        public static Recipe CreateRecipe(JsonFileGameData.Item itemData)
+        {
+            var item = new Recipe
+            {
+                Id = itemData.Id,
+                Name = itemData.Name,
+                Ingredients = itemData.Ingredients,
+                Results = itemData.Results
             };
 
             return item;

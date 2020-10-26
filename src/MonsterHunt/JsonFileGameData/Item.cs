@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 
 namespace MonsterHunt.JsonFileGameData
 {
@@ -10,5 +11,7 @@ namespace MonsterHunt.JsonFileGameData
         public int Health { get; set; }
         public int Attack { get; set; }
         public int Defence { get; set; }
+        public List<Guid> Ingredients { get; set; }
+        public List<Guid> Results { get; set; }
     }
 }

@@ -31,6 +31,17 @@
         "id": "9d434843-ff78-42b0-8dbb-286ce8d811d1",
         "name": "Leg armor 1",
         "defence": 1
+    }, {
+        "type": "recipe",
+        "id": "60287e62-9b16-45f6-8b0a-58103498bdb3",
+        "name": "Recipe 1",
+        "ingredients": [
+            "7aab3a4d-72d1-4c14-bff1-aa3bd2df9cd7",
+            "7b339c78-db60-4622-9ac5-511afc903fbf"
+        ],
+        "results": [
+            "e19cd790-d555-44d5-b772-a51e69ce279e"
+        ]
     }],
     "towns": [{
         "id": "72debef2-2b9a-402e-90b6-502c243abc44",
@@ -127,6 +138,9 @@
         "offers": [{
             "item": "e19cd790-d555-44d5-b772-a51e69ce279e",
             "price": 5
+        }, {
+            "item": "60287e62-9b16-45f6-8b0a-58103498bdb3",
+            "price": 7
         }]
     }]
 }
