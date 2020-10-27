@@ -34,6 +34,7 @@ namespace MonsterHunt
             commands.Add("equip ", GetEquipCommand(game));
             commands.Add("stats", GetStatsCommand(game));
             commands.Add("learn ", GetLearnCommand(game));
+            commands.Add("recipes", GetRecipesCommand(game));
 
             foreach (var command in ReadLines())
             {
@@ -504,6 +505,27 @@ namespace MonsterHunt
                 catch (ItemNotRecipeException)
                 {
                     Console.WriteLine("Can't learn item");
+                }
+            };
+
+            return command;
+        }
+
+        private static Action<string> GetRecipesCommand(MonsterHuntGame game)
+        {
+            Action<string> command = (v) =>
+            {
+                var recipes = game.GetRecipes();
+                if (recipes.Any())
+                {
+                    foreach (var recipe in recipes)
+                    {
+                        Console.WriteLine(recipe.Name);
+                    }
+                }
+                else
+                {
+                    Console.WriteLine("No recipes");
                 }
             };
 

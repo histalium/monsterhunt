@@ -560,5 +560,15 @@ namespace MonsterHunt
             Player.Recipes.Add(recipe.Id);
             Player.Inventory.Remove(recipe.Id);
         }
+
+        internal List<Recipe> GetRecipes()
+        {
+            var recipes = Player.Recipes
+                .Select(t => unitOfWork.Items.Get(t))
+                .Cast<Recipe>()
+                .ToList();
+
+            return recipes;
+        }
     }
 }
