@@ -35,6 +35,7 @@ namespace MonsterHunt
             commands.Add("stats", GetStatsCommand(game));
             commands.Add("learn ", GetLearnCommand(game));
             commands.Add("recipes", GetRecipesCommand(game));
+            commands.Add("make ", GetMakeCommand(game));
 
             foreach (var command in ReadLines())
             {
@@ -526,6 +527,35 @@ namespace MonsterHunt
                 else
                 {
                     Console.WriteLine("No recipes");
+                }
+            };
+
+            return command;
+        }
+
+        private static Action<string> GetMakeCommand(MonsterHuntGame game)
+        {
+            Action<string> command = (recipeName) =>
+            {
+                try
+                {
+                    game.Make(recipeName);
+                }
+                catch (InvalidItemException)
+                {
+                    Console.WriteLine("Invalid item");
+                }
+                catch (DoNotOwnItemException)
+                {
+                    Console.WriteLine("You don't have this item");
+                }
+                catch (DoNotKnowRecipeException)
+                {
+                    Console.WriteLine("You don't know this recipe");
+                }
+                catch (MissingIngredientsException)
+                {
+                    Console.WriteLine("You have missing ingredients");
                 }
             };
 

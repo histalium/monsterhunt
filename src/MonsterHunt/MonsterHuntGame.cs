@@ -570,5 +570,67 @@ namespace MonsterHunt
 
             return recipes;
         }
+
+        internal void Make(string recipeName)
+        {
+            if (Player.Health <= 0)
+            {
+                throw new DefeatedException();
+            }
+
+            if (encounters != null)
+            {
+                throw new InBattleModeException();
+            }
+
+            var item = unitOfWork.Items.Find(recipeName);
+
+            if (item == null)
+            {
+                throw new InvalidItemException();
+            }
+
+            var recipe = item as Recipe;
+
+            if (recipe == null)
+            {
+                throw new ItemNotRecipeException();
+            }
+
+            var knowRecipe = Player.Recipes
+                .Where(t => t == recipe.Id)
+                .Any();
+
+            if (!knowRecipe)
+            {
+                throw new DoNotKnowRecipeException();
+            }
+
+            var ingredientCount = recipe.Ingredients
+                .GroupBy(t => t)
+                .Select(t => new
+                {
+                    Id = t.Key,
+                    RecipteCount = t.Count(),
+                    InventoryCount = Player.Inventory.Where(i => i == t.Key).Count()
+                })
+                .ToList();
+
+            var missingIngredients = ingredientCount
+                .Where(t => t.RecipteCount > t.InventoryCount)
+                .Any();
+
+            if (missingIngredients)
+            {
+                throw new MissingIngredientsException();
+            }
+
+            foreach (var ingredient in recipe.Ingredients)
+            {
+                Player.Inventory.Remove(ingredient);
+            }
+
+            Player.Inventory.AddRange(recipe.Results);
+        }
     }
 }

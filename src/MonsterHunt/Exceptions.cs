@@ -101,4 +101,14 @@ namespace MonsterHunt
     {
         public ItemNotRecipeException() : base("Item is not a recipe") { }
     }
+
+    internal class DoNotKnowRecipeException : Exception
+    {
+        public DoNotKnowRecipeException() : base("Do not know recipe") { }
+    }
+
+    internal class MissingIngredientsException : Exception
+    {
+        public MissingIngredientsException() : base("Some ingredients are missing") { }
+    }
 }
