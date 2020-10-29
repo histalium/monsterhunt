@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.Immutable;
 using System.IO;
 using System.Linq;
+using MonsterHunt.Commands;
 
 namespace MonsterHunt
 {
@@ -22,20 +22,20 @@ namespace MonsterHunt
 
             Console.WriteLine($"Welcome in {game.CurrentTown.Name}");
 
-            Dictionary<string, Action<string>> commands = new Dictionary<string, Action<string>>();
-            commands.Add("go to ", GetGoToCommand(game));
-            commands.Add("attack", GeAttackCommand(game));
-            commands.Add("inventory", GetInventoryCommand(game));
-            commands.Add("requests", GetRequestsCommand(game));
-            commands.Add("offers", GetOffersCommand(game));
-            commands.Add("sell ", GetSellCommand(game));
-            commands.Add("buy ", GetBuyCommand(game));
-            commands.Add("use ", GetUseCommand(game));
-            commands.Add("equip ", GetEquipCommand(game));
-            commands.Add("stats", GetStatsCommand(game));
-            commands.Add("learn ", GetLearnCommand(game));
-            commands.Add("recipes", GetRecipesCommand(game));
-            commands.Add("make ", GetMakeCommand(game));
+            var commands = new Dictionary<string, ICommand>();
+            commands.Add("go to ", new GoToCommand(game));
+            commands.Add("attack", new AttackCommand(game));
+            commands.Add("inventory", new InventoryCommand(game));
+            commands.Add("requests", new RequestsCommand(game));
+            commands.Add("offers", new OffersCommand(game));
+            commands.Add("sell ", new SellCommand(game));
+            commands.Add("buy ", new BuyCommand(game));
+            commands.Add("use ", new UseCommand(game));
+            commands.Add("equip ", new EquipCommand(game));
+            commands.Add("stats", new StatsCommand(game));
+            commands.Add("learn ", new LearnCommand(game));
+            commands.Add("recipes", new RecipesCommand(game));
+            commands.Add("make ", new MakeCommand(game));
 
             foreach (var command in ReadLines())
             {
@@ -51,7 +51,7 @@ namespace MonsterHunt
 
                     if (c.Key != null)
                     {
-                        c.Value(command.Substring(c.Key.Length));
+                        c.Value.Execute(command.Substring(c.Key.Length));
                     }
                     else
                     {
@@ -133,72 +133,6 @@ namespace MonsterHunt
             return item;
         }
 
-        private static Action<string> GetGoToCommand(MonsterHuntGame game)
-        {
-            Action<string> command = (destination) =>
-            {
-                try
-                {
-                    game.GoToTown(destination);
-                    return;
-                }
-                catch (InvalidTownException)
-                {
-                    // do nothing. try other command.
-                }
-                catch (SameTownException)
-                {
-                    Console.WriteLine("Same town as current");
-                    return;
-                }
-                catch (NoRouteToTownException)
-                {
-                    Console.WriteLine("No route to town");
-                }
-
-                try
-                {
-                    game.GoToMerchant(destination);
-                    Console.WriteLine($"Welcome to {game.CurrentMerchant.Name}");
-                    return;
-                }
-                catch (InvalidMerchantException)
-                {
-                    // do nothing. try other command.
-                }
-                catch (SameMerchantException)
-                {
-                    Console.WriteLine("Same merchant as current");
-                    return;
-                }
-                catch (MerchantNotInTownException)
-                {
-                    // do nothing. try other command.
-                }
-
-                Console.WriteLine("Invalid location");
-            };
-
-            return command;
-        }
-
-        private static Action<string> GeAttackCommand(MonsterHuntGame game)
-        {
-            Action<string> command = (v) =>
-            {
-                try
-                {
-                    game.Attack();
-                }
-                catch (NotInBattleModeException)
-                {
-                    Console.WriteLine("You are not in a battle");
-                }
-            };
-
-            return command;
-        }
-
         private static void MonsterDefeated(object sender, MonsterDefeatedEventArgs e)
         {
             Console.WriteLine($"{e.Monster.Name} is defeated");
@@ -231,335 +165,6 @@ namespace MonsterHunt
         private static void ArrivedAtLocation(object sender, ArrivedAtLocationEventArgs e)
         {
             Console.WriteLine($"Welcome in {e.Town.Name}");
-        }
-
-        private static Action<string> GetInventoryCommand(MonsterHuntGame game)
-        {
-            Action<string> command = (v) =>
-            {
-                var inventory = game.GetInventory();
-                foreach (var item in inventory)
-                {
-                    Console.WriteLine(item.Name);
-                }
-            };
-
-            return command;
-        }
-
-        private static Action<string> GetRequestsCommand(MonsterHuntGame game)
-        {
-            Action<string> command = (v) =>
-            {
-                try
-                {
-                    var requests = game.GetRequests();
-                    foreach (var (item, price) in requests)
-                    {
-                        Console.WriteLine($"{item.Name} ({price}c)");
-                    }
-                }
-                catch (NotAtAMerchantException)
-                {
-                    Console.WriteLine("Not at a merchant");
-                }
-            };
-
-            return command;
-        }
-
-        private static Action<string> GetOffersCommand(MonsterHuntGame game)
-        {
-            Action<string> command = (v) =>
-            {
-                try
-                {
-                    var requests = game.GetOffers();
-                    foreach (var (item, price) in requests)
-                    {
-                        Console.WriteLine($"{item.Name} ({price}c)");
-                    }
-                }
-                catch (NotAtAMerchantException)
-                {
-                    Console.WriteLine("Not at a merchant");
-                }
-            };
-
-            return command;
-        }
-
-        private static Action<string> GetSellCommand(MonsterHuntGame game)
-        {
-            Action<string> command = (itemName) =>
-            {
-                try
-                {
-                    game.SellItem(itemName);
-                    Console.WriteLine($"Item sold. You have now {game.Player.Coins}c");
-                }
-                catch (InvalidItemException)
-                {
-                    Console.WriteLine("Invalid item");
-                }
-                catch (NotAtAMerchantException)
-                {
-                    Console.WriteLine("Not at a merchant");
-                }
-                catch (MerchantDoesNotRequestException)
-                {
-                    Console.WriteLine("Merchant does not request item");
-                }
-                catch (NotEnoughCoinsException)
-                {
-                    Console.WriteLine("You don't have enough coins");
-                }
-                catch (DoNotOwnItemException)
-                {
-                    Console.WriteLine("You do not have this item");
-                }
-            };
-
-            return command;
-        }
-
-        private static Action<string> GetBuyCommand(MonsterHuntGame game)
-        {
-            Action<string> command = (itemName) =>
-            {
-                try
-                {
-                    game.BuyItem(itemName);
-                    Console.WriteLine($"Bought item. You have now {game.Player.Coins}c");
-                }
-                catch (InvalidItemException)
-                {
-                    Console.WriteLine("Invalid item");
-                }
-                catch (NotAtAMerchantException)
-                {
-                    Console.WriteLine("Not at a merchant");
-                }
-                catch (MerchantDoesNotOfferException)
-                {
-                    Console.WriteLine("Merchant does not offer item");
-                }
-                catch (NotEnoughCoinsException)
-                {
-                    Console.WriteLine("You don't have enough coins");
-                }
-            };
-
-            return command;
-        }
-
-        private static Action<string> GetUseCommand(MonsterHuntGame game)
-        {
-            Action<string> command = (itemName) =>
-            {
-                try
-                {
-                    game.UseItem(itemName);
-                }
-                catch (InvalidItemException)
-                {
-                    Console.WriteLine("Invalid item");
-                }
-                catch (DoNotOwnItemException)
-                {
-                    Console.WriteLine("You do not have this item");
-                }
-                catch (CanNotUseItemException)
-                {
-                    Console.WriteLine("Iten can't be used");
-                }
-            };
-
-            return command;
-        }
-
-        private static Action<string> GetEquipCommand(MonsterHuntGame game)
-        {
-            Action<string> command = (item) =>
-            {
-                try
-                {
-                    game.EquipWeapon(item);
-                    return;
-                }
-                catch (InvalidItemException)
-                {
-                    Console.WriteLine("Invalid item");
-                    return;
-                }
-                catch (ItemNotAWeaponException)
-                {
-                    // do nothing. try other command.
-                }
-                catch (DoNotOwnItemException)
-                {
-                    Console.WriteLine("You don't have this item");
-                    return;
-                }
-
-                try
-                {
-                    game.EquipBodyArmor(item);
-                    return;
-                }
-                catch (InvalidItemException)
-                {
-                    Console.WriteLine("Invalid item");
-                    return;
-                }
-                catch (ItemNotBodyArmorException)
-                {
-                    // do nothing. try other command.
-                }
-                catch (DoNotOwnItemException)
-                {
-                    Console.WriteLine("You don't have this item");
-                    return;
-                }
-
-                try
-                {
-                    game.EquipLegArmor(item);
-                    return;
-                }
-                catch (InvalidItemException)
-                {
-                    Console.WriteLine("Invalid item");
-                    return;
-                }
-                catch (ItemNotLegArmorException)
-                {
-                    // do nothing. try other command.
-                }
-                catch (DoNotOwnItemException)
-                {
-                    Console.WriteLine("You don't have this item");
-                    return;
-                }
-
-                Console.WriteLine("Can't equip item");
-            };
-
-            return command;
-        }
-
-        private static Action<string> GetStatsCommand(MonsterHuntGame game)
-        {
-            Action<string> command = (v) =>
-            {
-                var stats = game.GetStats();
-
-                Console.WriteLine($"Health:     {stats.Health}/{stats.MaxHealth}");
-                Console.WriteLine($"Attack:     {stats.Attack}");
-                Console.WriteLine($"Defence:    {stats.Defence}");
-                Console.WriteLine();
-                if (string.IsNullOrEmpty(stats.WeaponName))
-                {
-                    Console.WriteLine($"Weapon:");
-                }
-                else
-                {
-                    Console.WriteLine($"Weapon:     {stats.WeaponName} (Attack +{stats.WeaponAttack})");
-                }
-                if (string.IsNullOrEmpty(stats.BodyArmorName))
-                {
-                    Console.WriteLine($"Body armor:");
-                }
-                else
-                {
-                    Console.WriteLine($"Body armor: {stats.BodyArmorName} (Defence +{stats.BodyArmorDefence})");
-                }
-                if (string.IsNullOrEmpty(stats.LegArmorName))
-                {
-                    Console.WriteLine($"Leg armor:");
-                }
-                else
-                {
-                    Console.WriteLine($"Leg armor:  {stats.LegArmorName} (Defence +{stats.LegArmorDefence})");
-                }
-            };
-
-            return command;
-        }
-
-        private static Action<string> GetLearnCommand(MonsterHuntGame game)
-        {
-            Action<string> command = (recipe) =>
-            {
-                try
-                {
-                    game.Learn(recipe);
-                }
-                catch (InvalidItemException)
-                {
-                    Console.WriteLine("Invalid item");
-                }
-                catch (DoNotOwnItemException)
-                {
-                    Console.WriteLine("You don't have this item");
-                }
-                catch (ItemNotRecipeException)
-                {
-                    Console.WriteLine("Can't learn item");
-                }
-            };
-
-            return command;
-        }
-
-        private static Action<string> GetRecipesCommand(MonsterHuntGame game)
-        {
-            Action<string> command = (v) =>
-            {
-                var recipes = game.GetRecipes();
-                if (recipes.Any())
-                {
-                    foreach (var recipe in recipes)
-                    {
-                        Console.WriteLine(recipe.Name);
-                    }
-                }
-                else
-                {
-                    Console.WriteLine("No recipes");
-                }
-            };
-
-            return command;
-        }
-
-        private static Action<string> GetMakeCommand(MonsterHuntGame game)
-        {
-            Action<string> command = (recipeName) =>
-            {
-                try
-                {
-                    game.Make(recipeName);
-                }
-                catch (InvalidItemException)
-                {
-                    Console.WriteLine("Invalid item");
-                }
-                catch (DoNotOwnItemException)
-                {
-                    Console.WriteLine("You don't have this item");
-                }
-                catch (DoNotKnowRecipeException)
-                {
-                    Console.WriteLine("You don't know this recipe");
-                }
-                catch (MissingIngredientsException)
-                {
-                    Console.WriteLine("You have missing ingredients");
-                }
-            };
-
-            return command;
         }
     }
 }
