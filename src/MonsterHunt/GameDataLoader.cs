@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text.Json;
@@ -115,7 +116,8 @@ namespace MonsterHunt
             {
                 Id = itemData.Id,
                 Name = itemData.Name,
-                Attack = itemData.Attack
+                Attack = itemData.Attack,
+                ElementAttacks = itemData.ElementAttacks.Select(t => new ElementAttack { Element = t.Element, Attack = t.Attack }).ToList()
             };
 
             return item;
@@ -177,6 +179,7 @@ namespace MonsterHunt
                 Name = monsterData.Name,
                 Attack = monsterData.Attack,
                 Defense = monsterData.Defense,
+                ElementDefenses = monsterData.ElementDefenses?.Select(t => new ElementDefense { Element = t.Element, Defense = t.Defense }).ToList() ?? new List<ElementDefense>(),
                 Health = monsterData.Health,
                 Loot = new RollResult()
                     .Set(1, GetRollResultId(monsterData.Loot?.Roll1))

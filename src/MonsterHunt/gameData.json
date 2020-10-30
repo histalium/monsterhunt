@@ -1,4 +1,14 @@
 {
+    "elements": [{
+        "id": "29652323-ee37-47a0-84f0-b197ac102e3b",
+        "name": "Element 1"
+    }, {
+        "id": "78451ccd-528e-4032-99bd-e0167d5817f9",
+        "name": "Element 2"
+    }, {
+        "id": "6e03ba25-8907-47b9-89f8-cad061318239",
+        "name": "Element 3"
+    }],
     "items": [{
         "type": "item",
         "id": "7aab3a4d-72d1-4c14-bff1-aa3bd2df9cd7",
@@ -20,7 +30,11 @@
         "type": "weapon",
         "id": "6a53a144-55e9-4f90-8308-97ab1fb088ca",
         "name": "Weapon 1",
-        "attack": 1
+        "attack": 1,
+        "elementAttacks": [{
+            "element": "29652323-ee37-47a0-84f0-b197ac102e3b",
+            "attack": 1
+        }]
     }, {
         "type": "body armor",
         "id": "9e4b1c98-9dc7-4695-9236-4fcebae9d75d",
@@ -71,7 +85,11 @@
             "roll1": "7aab3a4d-72d1-4c14-bff1-aa3bd2df9cd7",
             "roll2": "7aab3a4d-72d1-4c14-bff1-aa3bd2df9cd7",
             "roll3": "84b2cda1-2062-4b95-8ede-a299e93c7921"
-        }
+        },
+        "elementDefenses": [{
+            "element": "29652323-ee37-47a0-84f0-b197ac102e3b",
+            "defense": 1
+        }]
     }],
     "routes": [{
         "id": "aebafb50-d73e-4806-bad5-c9aec412d8a7",

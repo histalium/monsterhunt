@@ -13,5 +13,6 @@ namespace MonsterHunt.JsonFileGameData
         public int Defence { get; set; }
         public List<Guid> Ingredients { get; set; }
         public List<Guid> Results { get; set; }
+        public List<ElementAttack> ElementAttacks { get; set; }
     }
 }

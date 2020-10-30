@@ -124,7 +124,8 @@ namespace MonsterHunt
                 Defense = monster.Defense,
                 Name = monster.Name,
                 Health = monster.Health,
-                Loot = monster.Loot
+                Loot = monster.Loot,
+                ElementDefenses = monster.ElementDefenses
             };
 
             return copy;
@@ -143,8 +144,10 @@ namespace MonsterHunt
             }
 
             var attackRollPlayer = dice.Roll();
+            var weapon = Player.WeaponId.HasValue ? ((Weapon)unitOfWork.Items.Get(Player.WeaponId.Value)) : null;
+            var elementAttack = weapon == null ? 0 : GetElementAttack(weapon.ElementAttacks, CurrentMonster.ElementDefenses);
             var weaponAttack = Player.WeaponId.HasValue ? ((Weapon)unitOfWork.Items.Get(Player.WeaponId.Value)).Attack : 0;
-            var attackPlayer = Player.Attack + attackRollPlayer + weaponAttack - CurrentMonster.Defense;
+            var attackPlayer = Player.Attack + attackRollPlayer + weaponAttack + elementAttack - CurrentMonster.Defense;
             attackPlayer = Math.Max(0, attackPlayer);
             if (attackPlayer > CurrentMonster.Health)
             {
@@ -205,6 +208,40 @@ namespace MonsterHunt
             {
                 PlayerHealthChanged?.Invoke(this, new PlayerHealthChangedEventArgs(Player.Health));
             }
+        }
+
+        internal static int GetElementAttack(List<ElementAttack> attacks, List<ElementDefense> defenses)
+        {
+            var attackElements = attacks
+                .Select(t => t.Element)
+                .Distinct()
+                .ToList();
+
+            var attack = attackElements
+                .Select(t => Math.Max(0, GetElementAttack(attacks, t) - GetElementDefense(defenses, t)))
+                .Sum();
+
+            return attack;
+        }
+
+        internal static int GetElementAttack(List<ElementAttack> attacks, Guid element)
+        {
+            var attack = attacks
+                .Where(t => t.Element == element)
+                .Select(t => t.Attack)
+                .Sum();
+
+            return attack;
+        }
+
+        internal static int GetElementDefense(List<ElementDefense> defenses, Guid element)
+        {
+            var defense = defenses
+                .Where(t => t.Element == element)
+                .Select(t => t.Defense)
+                .Sum();
+
+            return defense;
         }
 
         internal void GoToMerchant(string merchantName)
