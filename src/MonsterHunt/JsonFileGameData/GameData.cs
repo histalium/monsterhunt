@@ -4,6 +4,7 @@ namespace MonsterHunt.JsonFileGameData
 {
     internal class GameData
     {
+        public List<Element> Elements { get; set; }
         public List<Item> Items { get; set; }
         public List<Town> Towns { get; set; }
         public List<Monster> Monsters { get; set; }

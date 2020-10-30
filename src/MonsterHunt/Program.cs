@@ -32,7 +32,7 @@ namespace MonsterHunt
             commands.Add("buy ", new BuyCommand(game));
             commands.Add("use ", new UseCommand(game));
             commands.Add("equip ", new EquipCommand(game));
-            commands.Add("stats", new StatsCommand(game));
+            commands.Add("stats", new StatsCommand(game, unitOfWork));
             commands.Add("learn ", new LearnCommand(game));
             commands.Add("recipes", new RecipesCommand(game));
             commands.Add("make ", new MakeCommand(game));

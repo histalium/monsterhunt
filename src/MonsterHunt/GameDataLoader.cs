@@ -22,6 +22,12 @@ namespace MonsterHunt
 
             var unitOfWork = new UnitOfWork();
 
+            foreach (var elementData in fileData.Elements)
+            {
+                var element = CreateElement(elementData);
+                unitOfWork.Elements.Add(element);
+            }
+
             const string itemType = "item";
             const string healthPotionType = "health potion";
             const string weaponType = "weapon";
@@ -85,6 +91,17 @@ namespace MonsterHunt
             }
 
             return unitOfWork;
+        }
+
+        private static Element CreateElement(JsonFileGameData.Element elementData)
+        {
+            var element = new Element
+            {
+                Id = elementData.Id,
+                Name = elementData.Name
+            };
+
+            return element;
         }
 
         private static Item CreateItem(JsonFileGameData.Item itemData)

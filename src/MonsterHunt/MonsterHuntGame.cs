@@ -541,6 +541,7 @@ namespace MonsterHunt
                 Defence = Player.Defense + (legDefence?.Defence ?? 0) + (bodyDefence?.Defence ?? 0),
                 WeaponName = weapon?.Name,
                 WeaponAttack = weapon?.Attack ?? 0,
+                ElementAttacks = weapon?.ElementAttacks ?? new List<ElementAttack>(),
                 BodyArmorName = bodyDefence?.Name,
                 BodyArmorDefence = bodyDefence?.Defence ?? 0,
                 LegArmorName = legDefence?.Name,
