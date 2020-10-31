@@ -2,7 +2,10 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using MonsterHunt.Commands;
+
+[assembly: InternalsVisibleTo("MonsterHunt.Tests")]
 
 namespace MonsterHunt
 {
@@ -11,8 +14,9 @@ namespace MonsterHunt
         static void Main(string[] args)
         {
             var unitOfWork = LoadGameData();
+            var player = CreatePlayer();
 
-            var game = new MonsterHuntGame(unitOfWork);
+            var game = new MonsterHuntGame(player, unitOfWork);
             game.MonsterDefeated += MonsterDefeated;
             game.MonsterEncountered += MonsterEncountered;
             game.PlayerHealthChanged += PlayerHealthChanged;
@@ -83,6 +87,23 @@ namespace MonsterHunt
             {
                 yield return Console.ReadLine();
             }
+        }
+
+        private static Player CreatePlayer()
+        {
+            var player = new Player
+            {
+                Id = Guid.NewGuid(),
+                Attack = 1,
+                Defense = 2,
+                Health = 30,
+                MaxHealth = 30,
+                Inventory = new List<Guid>(),
+                Coins = 50,
+                Recipes = new List<Guid>()
+            };
+
+            return player;
         }
 
         private static Item CreateHealthPotion(string name, int health)

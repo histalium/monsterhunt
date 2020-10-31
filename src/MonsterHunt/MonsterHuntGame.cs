@@ -23,11 +23,11 @@ namespace MonsterHunt
 
         public event EventHandler<ArrivedAtLocationEventArgs> ArrivedAtLocation;
 
-        public MonsterHuntGame(UnitOfWork unitOfWork)
+        public MonsterHuntGame(Player player, UnitOfWork unitOfWork)
         {
             this.unitOfWork = unitOfWork;
             CurrentTown = unitOfWork.Towns.Find("town 1");
-            Player = CreatePlayer();
+            Player = player;
         }
 
         public Town CurrentTown { get; private set; }
@@ -37,23 +37,6 @@ namespace MonsterHunt
         public Merchant CurrentMerchant { get; private set; }
 
         public Player Player { get; }
-
-        private static Player CreatePlayer()
-        {
-            var player = new Player
-            {
-                Id = Guid.NewGuid(),
-                Attack = 1,
-                Defense = 2,
-                Health = 30,
-                MaxHealth = 30,
-                Inventory = new List<Guid>(),
-                Coins = 50,
-                Recipes = new List<Guid>()
-            };
-
-            return player;
-        }
 
         public void GoToTown(string townName)
         {
