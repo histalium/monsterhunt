@@ -14,9 +14,10 @@ namespace MonsterHunt
         static void Main(string[] args)
         {
             var unitOfWork = LoadGameData();
+            var settings = new Settings { StartingTown = Guid.Parse("72debef2-2b9a-402e-90b6-502c243abc44") };
             var player = CreatePlayer();
 
-            var game = new MonsterHuntGame(player, unitOfWork);
+            var game = new MonsterHuntGame(player, unitOfWork, settings);
             game.MonsterDefeated += MonsterDefeated;
             game.MonsterEncountered += MonsterEncountered;
             game.PlayerHealthChanged += PlayerHealthChanged;

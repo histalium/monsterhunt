@@ -23,10 +23,10 @@ namespace MonsterHunt
 
         public event EventHandler<ArrivedAtLocationEventArgs> ArrivedAtLocation;
 
-        public MonsterHuntGame(Player player, UnitOfWork unitOfWork)
+        public MonsterHuntGame(Player player, UnitOfWork unitOfWork, Settings settings)
         {
             this.unitOfWork = unitOfWork;
-            CurrentTown = unitOfWork.Towns.Find("town 1");
+            CurrentTown = unitOfWork.Towns.Get(settings.StartingTown);
             Player = player;
         }
 

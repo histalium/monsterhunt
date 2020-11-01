@@ -13,6 +13,15 @@ namespace MonsterHunt
             towns.Add(town);
         }
 
+        public Town Get(Guid id)
+        {
+            var town = towns
+                .Where(t => t.Id == id)
+                .Single();
+
+            return town;
+        }
+
         public Town Find(string townName)
         {
             var town = towns

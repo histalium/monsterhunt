@@ -16,7 +16,8 @@ namespace MonsterHunt.Tests
             unitOfWork.Towns.Add(town2);
             var route = new Route { Id = Guid.NewGuid(), StartingPoint = town1.Id, Destination = town2.Id };
             unitOfWork.Routes.Add(route);
-            var game = new MonsterHuntGame(player, unitOfWork);
+            var settings = new Settings { StartingTown = town1.Id };
+            var game = new MonsterHuntGame(player, unitOfWork, settings);
             Assert.Throws<DefeatedException>(() => game.GoToTown("town 2"));
         }
     }
