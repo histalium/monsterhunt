@@ -10,6 +10,7 @@ namespace MonsterHunt
             Routes = new RouteRepository();
             Towns = new TownRepository();
             Elements = new ElementRepository();
+            Locations = new LocationRepository();
         }
 
         public ItemRepository Items { get; }
@@ -23,5 +24,7 @@ namespace MonsterHunt
         public TownRepository Towns { get; }
 
         public ElementRepository Elements { get; }
+
+        public LocationRepository Locations { get; }
     }
 }

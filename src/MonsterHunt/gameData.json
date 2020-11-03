@@ -1,164 +1,247 @@
 {
-    "elements": [{
-        "id": "29652323-ee37-47a0-84f0-b197ac102e3b",
-        "name": "Element 1"
-    }, {
-        "id": "78451ccd-528e-4032-99bd-e0167d5817f9",
-        "name": "Element 2"
-    }, {
-        "id": "6e03ba25-8907-47b9-89f8-cad061318239",
-        "name": "Element 3"
-    }],
-    "items": [{
-        "type": "item",
-        "id": "7aab3a4d-72d1-4c14-bff1-aa3bd2df9cd7",
-        "name": "Item 1"
-    }, {
-        "type": "item",
-        "id": "7b339c78-db60-4622-9ac5-511afc903fbf",
-        "name": "Item 2"
-    }, {
-        "type": "item",
-        "id": "84b2cda1-2062-4b95-8ede-a299e93c7921",
-        "name": "Item 3"
-    }, {
-        "type": "health potion",
-        "id": "e19cd790-d555-44d5-b772-a51e69ce279e",
-        "name": "Health potion 1",
-        "health": 5
-    }, {
-        "type": "weapon",
-        "id": "6a53a144-55e9-4f90-8308-97ab1fb088ca",
-        "name": "Weapon 1",
-        "attack": 1,
-        "elementAttacks": [{
-            "element": "29652323-ee37-47a0-84f0-b197ac102e3b",
-            "attack": 1
-        }]
-    }, {
-        "type": "body armor",
-        "id": "9e4b1c98-9dc7-4695-9236-4fcebae9d75d",
-        "name": "Body armor 1",
-        "defence": 1
-    }, {
-        "type": "leg armor",
-        "id": "9d434843-ff78-42b0-8dbb-286ce8d811d1",
-        "name": "Leg armor 1",
-        "defence": 1
-    }, {
-        "type": "recipe",
-        "id": "60287e62-9b16-45f6-8b0a-58103498bdb3",
-        "name": "Recipe 1",
-        "ingredients": [
-            "7aab3a4d-72d1-4c14-bff1-aa3bd2df9cd7",
-            "7b339c78-db60-4622-9ac5-511afc903fbf"
-        ],
-        "results": [
-            "e19cd790-d555-44d5-b772-a51e69ce279e"
-        ]
-    }],
-    "towns": [{
-        "id": "72debef2-2b9a-402e-90b6-502c243abc44",
-        "name": "Town 1"
-    }, {
-        "id": "5684fe3d-08fa-4f9c-94dd-ecfecaadc51c",
-        "name": "Town 2"
-    }],
-    "monsters": [{
-        "id": "ebb8f791-f8bf-4465-857d-27dfdd5ed05c",
-        "name": "Monster 1",
-        "attack": 0,
-        "defense": 1,
-        "health": 15,
-        "loot": {
-            "roll1": "7aab3a4d-72d1-4c14-bff1-aa3bd2df9cd7",
-            "roll2": "7aab3a4d-72d1-4c14-bff1-aa3bd2df9cd7",
-            "roll3": "7b339c78-db60-4622-9ac5-511afc903fbf"
-        }
-    }, {
-        "id": "d799e845-01e7-4e3c-bc0a-325ed15dfa27",
-        "name": "Monster 2",
-        "attack": 1,
-        "defense": 1,
-        "health": 12,
-        "loot": {
-            "roll1": "7aab3a4d-72d1-4c14-bff1-aa3bd2df9cd7",
-            "roll2": "7aab3a4d-72d1-4c14-bff1-aa3bd2df9cd7",
-            "roll3": "84b2cda1-2062-4b95-8ede-a299e93c7921"
+    "elements": [
+        {
+            "id": "29652323-ee37-47a0-84f0-b197ac102e3b",
+            "name": "Element 1"
         },
-        "elementDefenses": [{
-            "element": "29652323-ee37-47a0-84f0-b197ac102e3b",
-            "defense": 1
-        }]
-    }],
-    "routes": [{
-        "id": "aebafb50-d73e-4806-bad5-c9aec412d8a7",
-        "startingPoint": "72debef2-2b9a-402e-90b6-502c243abc44",
-        "destination": "5684fe3d-08fa-4f9c-94dd-ecfecaadc51c",
-        "numberOfMonsters": 2,
-        "monsters": {
-            "roll1": "ebb8f791-f8bf-4465-857d-27dfdd5ed05c",
-            "roll2": "ebb8f791-f8bf-4465-857d-27dfdd5ed05c",
-            "roll3": "ebb8f791-f8bf-4465-857d-27dfdd5ed05c",
-            "roll4": "ebb8f791-f8bf-4465-857d-27dfdd5ed05c",
-            "roll5": "d799e845-01e7-4e3c-bc0a-325ed15dfa27",
-            "roll6": "d799e845-01e7-4e3c-bc0a-325ed15dfa27"
+        {
+            "id": "78451ccd-528e-4032-99bd-e0167d5817f9",
+            "name": "Element 2"
+        },
+        {
+            "id": "6e03ba25-8907-47b9-89f8-cad061318239",
+            "name": "Element 3"
         }
-    }, {
-        "id": "aebafb50-d73e-4806-bad5-c9aec412d8a7",
-        "startingPoint": "5684fe3d-08fa-4f9c-94dd-ecfecaadc51c",
-        "destination": "72debef2-2b9a-402e-90b6-502c243abc44",
-        "numberOfMonsters": 2,
-        "monsters": {
-            "roll1": "ebb8f791-f8bf-4465-857d-27dfdd5ed05c",
-            "roll2": "ebb8f791-f8bf-4465-857d-27dfdd5ed05c",
-            "roll3": "ebb8f791-f8bf-4465-857d-27dfdd5ed05c",
-            "roll4": "ebb8f791-f8bf-4465-857d-27dfdd5ed05c",
-            "roll5": "d799e845-01e7-4e3c-bc0a-325ed15dfa27",
-            "roll6": "d799e845-01e7-4e3c-bc0a-325ed15dfa27"
+    ],
+    "locations": [
+        {
+            "id": "02d2cb76-8e0e-4f01-a719-998ddc0e7c54",
+            "name": "",
+            "connectedLocations": [
+                "b3d195bd-c7d7-45f3-98de-ab7192845dd0"
+            ]
+        },
+        {
+            "id": "b3d195bd-c7d7-45f3-98de-ab7192845dd0",
+            "name": "",
+            "connectedLocations": [
+                "02d2cb76-8e0e-4f01-a719-998ddc0e7c54",
+                "d3fa9d13-d0e2-4489-9f16-c75b0842159a"
+            ]
+        },
+        {
+            "id": "d3fa9d13-d0e2-4489-9f16-c75b0842159a",
+            "name": "",
+            "connectedLocations": [
+                "b3d195bd-c7d7-45f3-98de-ab7192845dd0",
+                "7335473b-394d-4a69-8e1f-ab0274f66289"
+            ]
+        },
+        {
+            "id": "7335473b-394d-4a69-8e1f-ab0274f66289",
+            "name": "",
+            "connectedLocations": [
+                "d3fa9d13-d0e2-4489-9f16-c75b0842159a",
+                "065f5fd3-495f-4381-a4eb-941bb755f16d"
+            ]
+        },
+        {
+            "id": "065f5fd3-495f-4381-a4eb-941bb755f16d",
+            "name": "",
+            "connectedLocations": [
+                "7335473b-394d-4a69-8e1f-ab0274f66289"
+            ]
         }
-    }],
-    "merchants": [{
-        "id": "ceb80487-55c8-45ac-be1b-52997f986c05",
-        "name": "Merchant 1",
-        "town": "72debef2-2b9a-402e-90b6-502c243abc44",
-        "requests": [{
-            "item": "7aab3a4d-72d1-4c14-bff1-aa3bd2df9cd7",
-            "price": 1
-        }, {
-            "item": "7b339c78-db60-4622-9ac5-511afc903fbf",
-            "price": 2
-        }],
-        "offers": [{
-            "item": "e19cd790-d555-44d5-b772-a51e69ce279e",
-            "price": 5
-        }, {
-            "item": "6a53a144-55e9-4f90-8308-97ab1fb088ca",
-            "price": 7
-        }, {
-            "item": "9e4b1c98-9dc7-4695-9236-4fcebae9d75d",
-            "price": 7
-        }, {
-            "item": "9d434843-ff78-42b0-8dbb-286ce8d811d1",
-            "price": 7
-        }]
-    }, {
-        "id": "84875996-9340-48b6-8142-2489359b04c7",
-        "name": "Merchant 2",
-        "town": "5684fe3d-08fa-4f9c-94dd-ecfecaadc51c",
-        "requests": [{
-            "item": "7aab3a4d-72d1-4c14-bff1-aa3bd2df9cd7",
-            "price": 1
-        }, {
-            "item": "84b2cda1-2062-4b95-8ede-a299e93c7921",
-            "price": 3
-        }],
-        "offers": [{
-            "item": "e19cd790-d555-44d5-b772-a51e69ce279e",
-            "price": 5
-        }, {
-            "item": "60287e62-9b16-45f6-8b0a-58103498bdb3",
-            "price": 7
-        }]
-    }]
+    ],
+    "items": [
+        {
+            "type": "item",
+            "id": "7aab3a4d-72d1-4c14-bff1-aa3bd2df9cd7",
+            "name": "Item 1"
+        },
+        {
+            "type": "item",
+            "id": "7b339c78-db60-4622-9ac5-511afc903fbf",
+            "name": "Item 2"
+        },
+        {
+            "type": "item",
+            "id": "84b2cda1-2062-4b95-8ede-a299e93c7921",
+            "name": "Item 3"
+        },
+        {
+            "type": "health potion",
+            "id": "e19cd790-d555-44d5-b772-a51e69ce279e",
+            "name": "Health potion 1",
+            "health": 5
+        },
+        {
+            "type": "weapon",
+            "id": "6a53a144-55e9-4f90-8308-97ab1fb088ca",
+            "name": "Weapon 1",
+            "attack": 1,
+            "elementAttacks": [
+                {
+                    "element": "29652323-ee37-47a0-84f0-b197ac102e3b",
+                    "attack": 1
+                }
+            ]
+        },
+        {
+            "type": "body armor",
+            "id": "9e4b1c98-9dc7-4695-9236-4fcebae9d75d",
+            "name": "Body armor 1",
+            "defence": 1
+        },
+        {
+            "type": "leg armor",
+            "id": "9d434843-ff78-42b0-8dbb-286ce8d811d1",
+            "name": "Leg armor 1",
+            "defence": 1
+        },
+        {
+            "type": "recipe",
+            "id": "60287e62-9b16-45f6-8b0a-58103498bdb3",
+            "name": "Recipe 1",
+            "ingredients": [
+                "7aab3a4d-72d1-4c14-bff1-aa3bd2df9cd7",
+                "7b339c78-db60-4622-9ac5-511afc903fbf"
+            ],
+            "results": [
+                "e19cd790-d555-44d5-b772-a51e69ce279e"
+            ]
+        }
+    ],
+    "towns": [
+        {
+            "id": "72debef2-2b9a-402e-90b6-502c243abc44",
+            "name": "Town 1"
+        },
+        {
+            "id": "5684fe3d-08fa-4f9c-94dd-ecfecaadc51c",
+            "name": "Town 2"
+        }
+    ],
+    "monsters": [
+        {
+            "id": "ebb8f791-f8bf-4465-857d-27dfdd5ed05c",
+            "name": "Monster 1",
+            "attack": 0,
+            "defense": 1,
+            "health": 15,
+            "loot": {
+                "roll1": "7aab3a4d-72d1-4c14-bff1-aa3bd2df9cd7",
+                "roll2": "7aab3a4d-72d1-4c14-bff1-aa3bd2df9cd7",
+                "roll3": "7b339c78-db60-4622-9ac5-511afc903fbf"
+            }
+        },
+        {
+            "id": "d799e845-01e7-4e3c-bc0a-325ed15dfa27",
+            "name": "Monster 2",
+            "attack": 1,
+            "defense": 1,
+            "health": 12,
+            "loot": {
+                "roll1": "7aab3a4d-72d1-4c14-bff1-aa3bd2df9cd7",
+                "roll2": "7aab3a4d-72d1-4c14-bff1-aa3bd2df9cd7",
+                "roll3": "84b2cda1-2062-4b95-8ede-a299e93c7921"
+            },
+            "elementDefenses": [
+                {
+                    "element": "29652323-ee37-47a0-84f0-b197ac102e3b",
+                    "defense": 1
+                }
+            ]
+        }
+    ],
+    "routes": [
+        {
+            "id": "aebafb50-d73e-4806-bad5-c9aec412d8a7",
+            "startingPoint": "72debef2-2b9a-402e-90b6-502c243abc44",
+            "destination": "5684fe3d-08fa-4f9c-94dd-ecfecaadc51c",
+            "numberOfMonsters": 2,
+            "monsters": {
+                "roll1": "ebb8f791-f8bf-4465-857d-27dfdd5ed05c",
+                "roll2": "ebb8f791-f8bf-4465-857d-27dfdd5ed05c",
+                "roll3": "ebb8f791-f8bf-4465-857d-27dfdd5ed05c",
+                "roll4": "ebb8f791-f8bf-4465-857d-27dfdd5ed05c",
+                "roll5": "d799e845-01e7-4e3c-bc0a-325ed15dfa27",
+                "roll6": "d799e845-01e7-4e3c-bc0a-325ed15dfa27"
+            }
+        },
+        {
+            "id": "aebafb50-d73e-4806-bad5-c9aec412d8a7",
+            "startingPoint": "5684fe3d-08fa-4f9c-94dd-ecfecaadc51c",
+            "destination": "72debef2-2b9a-402e-90b6-502c243abc44",
+            "numberOfMonsters": 2,
+            "monsters": {
+                "roll1": "ebb8f791-f8bf-4465-857d-27dfdd5ed05c",
+                "roll2": "ebb8f791-f8bf-4465-857d-27dfdd5ed05c",
+                "roll3": "ebb8f791-f8bf-4465-857d-27dfdd5ed05c",
+                "roll4": "ebb8f791-f8bf-4465-857d-27dfdd5ed05c",
+                "roll5": "d799e845-01e7-4e3c-bc0a-325ed15dfa27",
+                "roll6": "d799e845-01e7-4e3c-bc0a-325ed15dfa27"
+            }
+        }
+    ],
+    "merchants": [
+        {
+            "id": "ceb80487-55c8-45ac-be1b-52997f986c05",
+            "name": "Merchant 1",
+            "town": "72debef2-2b9a-402e-90b6-502c243abc44",
+            "requests": [
+                {
+                    "item": "7aab3a4d-72d1-4c14-bff1-aa3bd2df9cd7",
+                    "price": 1
+                },
+                {
+                    "item": "7b339c78-db60-4622-9ac5-511afc903fbf",
+                    "price": 2
+                }
+            ],
+            "offers": [
+                {
+                    "item": "e19cd790-d555-44d5-b772-a51e69ce279e",
+                    "price": 5
+                },
+                {
+                    "item": "6a53a144-55e9-4f90-8308-97ab1fb088ca",
+                    "price": 7
+                },
+                {
+                    "item": "9e4b1c98-9dc7-4695-9236-4fcebae9d75d",
+                    "price": 7
+                },
+                {
+                    "item": "9d434843-ff78-42b0-8dbb-286ce8d811d1",
+                    "price": 7
+                }
+            ]
+        },
+        {
+            "id": "84875996-9340-48b6-8142-2489359b04c7",
+            "name": "Merchant 2",
+            "town": "5684fe3d-08fa-4f9c-94dd-ecfecaadc51c",
+            "requests": [
+                {
+                    "item": "7aab3a4d-72d1-4c14-bff1-aa3bd2df9cd7",
+                    "price": 1
+                },
+                {
+                    "item": "84b2cda1-2062-4b95-8ede-a299e93c7921",
+                    "price": 3
+                }
+            ],
+            "offers": [
+                {
+                    "item": "e19cd790-d555-44d5-b772-a51e69ce279e",
+                    "price": 5
+                },
+                {
+                    "item": "60287e62-9b16-45f6-8b0a-58103498bdb3",
+                    "price": 7
+                }
+            ]
+        }
+    ]
 }

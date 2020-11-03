@@ -28,6 +28,12 @@ namespace MonsterHunt
                 unitOfWork.Elements.Add(element);
             }
 
+            foreach (var locationData in fileData.Locations)
+            {
+                var location = CreateLocation(locationData);
+                unitOfWork.Locations.Add(location);
+            }
+
             const string itemType = "item";
             const string healthPotionType = "health potion";
             const string weaponType = "weapon";
@@ -102,6 +108,18 @@ namespace MonsterHunt
             };
 
             return element;
+        }
+
+        private static Location CreateLocation(JsonFileGameData.Location locationData)
+        {
+            var location = new Location
+            {
+                Id = locationData.Id,
+                Name = locationData.Name,
+                ConnectedLocations = locationData.ConnectedLocations.ToList()
+            };
+
+            return location;
         }
 
         private static Item CreateItem(JsonFileGameData.Item itemData)

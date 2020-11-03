@@ -10,7 +10,7 @@
             "request": "launch",
             "preLaunchTask": "build",
             // If you have changed target frameworks, make sure to update the program path.
-            "program": "${workspaceFolder}/src/MonsterHunt/bin/Debug/netcoreapp3.1/src.dll",
+            "program": "${workspaceFolder}/src/MonsterHunt/bin/Debug/netcoreapp3.1/MonsterHunt.dll",
             "args": [],
             "cwd": "${workspaceFolder}/src/MonsterHunt",
             // For more information about the 'console' field, see https://aka.ms/VSCode-CS-LaunchJson-Console
